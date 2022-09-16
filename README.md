@@ -63,7 +63,7 @@ require("do.nvim").setup({
 ## Lualine
 
 To make this plugin actually show something, you'll have to mount its view
-somewhere. I currentl like to have it in the winbar, using lualine. But it
+somewhere. I currently like to have it in the winbar, using lualine. But it
 should work anywhere really.
 
 ```lua
