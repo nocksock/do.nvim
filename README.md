@@ -19,6 +19,8 @@
 
 A tiny task manager within nvim that helps you stay on track.
 
+![Screenshot](https://raw.githubusercontent.com/nocksock/do.nvim/main/assets/demo.png)
+
 ## Rationale
 
 While coding, we often need to do several things that depend on another.
