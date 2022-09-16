@@ -32,7 +32,8 @@ This plugin provides a few simple commands to help you stay on track.
 It manages a list of things and always shows you the first item.
 It provides you with some commands to add things to it, without leaving context.
 And it uses a simple, intuitive floating buffer to manage that list.
--
+
+
 ## Usage
 
 - `:Do` add a line to the end of the list.
