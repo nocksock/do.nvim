@@ -16,9 +16,8 @@
 -- A tiny task manager that helps you stay on track.
 --
 local create = vim.api.nvim_create_user_command
-local kaomoji = require("kaomojis")
-local ui = R('ui')
-local core = R('core')
+local kaomoji = require("do.kaomojis")
+local core = require('do.core')
 
 _G.DoStatusline = core.view
 
@@ -36,7 +35,6 @@ end, { bang = true })
 
 create("DoToggle", core.toggle, {})
 create("DoEdit", core.edit, {})
-create("DoClear", core.clear, { bang = true })
 create("DoSave", core.save, { bang = true })
 
 return core

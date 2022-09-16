@@ -1,3 +1,4 @@
+local utils = require('do.utils')
 local joy = vim.split([[
 (* ^ ω ^)
 (´ ∀ ` *)
@@ -145,8 +146,8 @@ local doing = vim.split([[
 ]], "\n")
 
 return {
-  doubt = function() return doubt[math.random(#doubt)] end,
-  confused = function() return confused[math.random(#confused)] end,
-  joy = function() return joy[math.random(#joy)] end,
-  doing = function() return doing[math.random(#doing)] end,
+  doubt = function(seed) return utils.memo_random(doubt, seed) end,
+  confused = function(seed) return utils.memo_random(confused, seed) end,
+  joy = function(seed) return utils.memo_random(joy, seed) end,
+  doing = function(seed) return utils.memo_random(doing, seed) end,
 }

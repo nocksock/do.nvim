@@ -1,5 +1,3 @@
-fix :DoSave if task file is present
-Add kaomoji to doing
 Add option to disable all kaomojis
 Add option for prefix (Default: `Doing: `)
 Handle :w, :q, :x in floating window
@@ -7,3 +5,5 @@ use custom highlight groups
 Handle manual change of task file
 Make :cd and :tcd check fo task file again
 add tests
+foo
+more
