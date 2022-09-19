@@ -54,8 +54,9 @@ use("https://github.com/nocksock/do.nvim")
 -- setup wherever you do that in you config (eg init.lua)
 require("do.nvim").setup({
   -- default options
-  use_winbar = false, -- use the winbar (requires nvim 0.8)
   message_timeout = 2000, -- how long notifications are shown
+  kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
+  doing_prefix = "Doing: ",
   store = {
     auto_create_file = false, -- automatically create a .do_tasks when calling :Do
     file_name = ".do_tasks",
@@ -66,7 +67,7 @@ require("do.nvim").setup({
 ## Lualine
 
 To make this plugin actually show something, you'll have to mount its view
-somewhere. I currently like to have it in the winbar, using lualine. But it
+somewhere. I currently like to have it in the winbar, eg: using lualine. But it
 should work anywhere really.
 
 ```lua
@@ -74,7 +75,11 @@ require('lualine').setup {
   winbar = {
     lualine_a = { require("do.nvim").view },
   },
-  inactive_winbar = {},
+  inactive_winbar = {
+    -- in order to prevent jumping of code in certain cursor positions this will
+    -- (at the moment) show an empty line - but only if .view has contents.
+    lualine_a = { require("do.nvim").view_inactive },
+  },
 }
 ```
 
