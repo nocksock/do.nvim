@@ -44,7 +44,7 @@ function View.render(state)
 end
 
 function View.render_inactive(state)
-  return " "
+  return "  "
 end
 
 return View

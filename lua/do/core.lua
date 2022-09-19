@@ -6,7 +6,7 @@ local C = {}
 
 ---@class DoOptions
 ---@field message_timeout number how long a message (eg. for Done!) should be displayed in ms
----@field kaomoji_mode number 0: most kaomojis, 1: disable kaomiji in doing mode 
+---@field kaomoji_mode number 0: most kaomojis, 1: disable kaomiji in doing mode
 ---@field doing_prefix string Prefix for Doing-View, default: "Doing: "
 ---@field store TaskStoreOptions
 local default_opts = {
@@ -17,7 +17,7 @@ local default_opts = {
   ---@class TaskStoreOptions
   store = {
     auto_create_file = false,
-    file_name = ".do_tasks",
+    file_name = ".do_tasks"
   }
 }
 
@@ -39,7 +39,7 @@ local state = {
 function C.show_message(str, hl)
   state.message = "%#" .. (hl or "TablineSel") .. "#" .. str
 
-  vim.defer_fn(function ()
+  vim.defer_fn(function()
     state.message = nil
   end, default_opts.message_timeout)
 end
@@ -65,36 +65,48 @@ function C.done()
   end
 end
 
-C.edit = function()
+function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
   end)
 end
 
-C.save = function()
+function C.save()
   state.tasks:sync(true)
 end
 
 ---@param opts DoOptions
-C.setup = function(opts)
+function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
 
   return C
 end
 
-C.toggle = function()
+function C.toggle()
   state.view_enabled = not state.view_enabled
 end
 
 C.statusline = "%!v:lua.DoStatusline()"
 
-C.view = function()
-  return view.render(state)
+function C.view()
+  if C.is_visible() then
+    return view.render(state)
+  end
 end
 
-C.view_inactive = function()
-  return view.render_inactive(state)
+function C.view_inactive()
+  if C.is_visible() then
+    return view.render_inactive(state)
+  end
+end
+
+function C.has_items()
+  return state.tasks:count() > 0
+end
+
+function C.is_visible()
+  return state.view_enabled and C.has_items()
 end
 
 return C
