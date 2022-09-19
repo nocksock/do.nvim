@@ -6,7 +6,6 @@ local C = {}
 
 ---@class DoOptions
 local default_opts = {
-  use_winbar = false,
   message_timeout = 2000,
 
   ---@class TaskStoreOptions
@@ -74,10 +73,6 @@ C.setup = function(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
 
-  if state.options.use_winbar then
-    vim.o.winbar = C.statusline
-  end
-
   return C
 end
 
@@ -86,6 +81,7 @@ C.toggle = function()
 end
 
 C.statusline = "%!v:lua.DoStatusline()"
+
 C.view = function()
   return view.render(state)
 end
