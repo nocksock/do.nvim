@@ -1,7 +1,10 @@
-Add demo video
-Add option to disable all kaomojis
+prevent jumping for winbar
+Add option to disable doing kaomojis
 Add option for prefix (Default: `Doing: `)
-use custom highlight groups
+make return in normal mode also quit :DoEdit
 reload tasks when task file has been changed outside of :DoEdit
 Make :cd and :tcd check fo task file again
+Add demo video
+use custom highlight groups
 add tests
+make winbar not show on unfocussed windows
