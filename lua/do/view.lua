@@ -12,7 +12,7 @@ function View.render(state)
     local display = ""
     local aligned = false
     local current = state.tasks:current()
-    local kaomoji = kaomojis.doing(current)
+    local kaomoji = state.options.kaomojis == 0 and kaomojis.doing(current) or ""
 
     if state.message then
       return state.message
@@ -22,7 +22,7 @@ function View.render(state)
       return ""
     end
 
-    display = "%#TablineSel# " .. kaomoji .. " Doing: " .. current
+    display = "%#TablineSel# " .. kaomoji .. " " .. state.options.doing_prefix .. current
 
     if count > 1 then
       display = display .. "%=+" .. (count - 1 ) .. " more "
