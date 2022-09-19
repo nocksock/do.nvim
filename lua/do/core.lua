@@ -93,4 +93,8 @@ C.view = function()
   return view.render(state)
 end
 
+C.view_inactive = function()
+  return view.render_inactive(state)
+end
+
 return C
