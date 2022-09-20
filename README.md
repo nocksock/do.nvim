@@ -46,7 +46,9 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
 ## Installation
 
-- Requires Neovim 0.8 (haven't tested with anything below)
+- Requires Neovim 0.8. Mostly because I haven't tested with anything below.
+  At least recommended, because the winbar is ideal for this, which is a 0.8
+  feature.
 
 ```lua
 -- use the package manager of your choice, eg. packer
