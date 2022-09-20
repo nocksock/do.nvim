@@ -18,6 +18,7 @@
 local create = vim.api.nvim_create_user_command
 local kaomoji = require("do.kaomojis")
 local core = require('do.core')
+vim.pretty_print(core.state)
 
 _G.DoStatusline = core.view
 
