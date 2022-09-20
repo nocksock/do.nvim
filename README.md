@@ -1,4 +1,5 @@
-> 🚧 Warning: this plugin is steaming fresh. Stuff might break.
+> 🚧 Warning: this plugin is steaming fresh. Stuff might break. ლ(ಠ_ಠ ლ)
+
 
 # Do.nvim
 
