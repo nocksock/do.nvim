@@ -108,4 +108,8 @@ M.init = function(options)
   return instance:set(instance:import_file() or {})
 end
 
+function M:has_items() 
+  return self:count() > 0
+end
+
 return M

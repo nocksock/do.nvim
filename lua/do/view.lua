@@ -1,8 +1,15 @@
 local kaomojis = require("do.kaomojis")
 local View = {}
 
+function View.is_visible(state)
+  return state.view_enabled and state.tasks:has_items()
+end
+
+---comment
+---@param state DoState
+---@return string
 function View.render(state)
-  if not state.view_enabled then
+  if not View.is_visible(state) then
     return ""
   end
 
@@ -12,7 +19,7 @@ function View.render(state)
     local display = ""
     local aligned = false
     local current = state.tasks:current()
-    local kaomoji = state.options.kaomojis == 0 and kaomojis.doing(current) or ""
+    local kaomoji = state.options.kaomoji_mode == 0 and kaomojis.doing(current) or ""
 
     if state.message then
       return state.message
@@ -44,6 +51,10 @@ function View.render(state)
 end
 
 function View.render_inactive(state)
+  if not View.is_visible(state) then
+    return ""
+  end
+
   return "  "
 end
 

@@ -11,7 +11,7 @@ local C = {}
 ---@field store TaskStoreOptions
 local default_opts = {
   message_timeout = 2000,
-  kaomoji_mode = 1,
+  kaomoji_mode = 0,
   doing_prefix = "Doing: ",
 
   ---@class TaskStoreOptions
@@ -90,15 +90,11 @@ end
 C.statusline = "%!v:lua.DoStatusline()"
 
 function C.view()
-  if C.is_visible() then
-    return view.render(state)
-  end
+  return view.render(state)
 end
 
 function C.view_inactive()
-  if C.is_visible() then
-    return view.render_inactive(state)
-  end
+  return view.render_inactive(state)
 end
 
 function C.has_items()
