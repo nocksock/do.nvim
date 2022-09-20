@@ -29,7 +29,7 @@ function View.render(state)
       return ""
     end
 
-    display = "%#TablineSel# " .. kaomoji .. " " .. state.options.doing_prefix .. current
+    display = --[[ "%#TablineSel# " .. ]] kaomoji .. " " .. state.options.doing_prefix .. current
 
     if count > 1 then
       display = display .. "%=+" .. (count - 1 ) .. " more "

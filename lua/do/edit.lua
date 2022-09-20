@@ -1,4 +1,6 @@
+local state = require("do.state").state
 local utils = require("do.utils")
+-- print("core:", vim.inspect(core)) -- __AUTO_GENERATED_PRINT_VAR__
 local global_win = nil
 local global_buf = nil
 local M = {}
@@ -70,10 +72,10 @@ function M.toggle_edit(tasks, cb)
     M.close(cb)
   end, { buffer = global_buf })
 
-  local group = vim.api.nvim_create_augroup("do_nvim", { clear = true })
+  -- local group = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
   vim.api.nvim_create_autocmd("BufWriteCmd", {
-    group = group,
+    group = state.auGroupId,
     buffer = global_buf,
     callback = function()
       M.close(cb)
@@ -81,7 +83,7 @@ function M.toggle_edit(tasks, cb)
   })
 
   vim.api.nvim_create_autocmd("BufModifiedSet", {
-    group = group,
+    group = state.auGroupId,
     buffer = global_buf,
     callback = function()
       vim.api.nvim_buf_set_option(global_buf, "modified", false)

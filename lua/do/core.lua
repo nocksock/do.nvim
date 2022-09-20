@@ -2,6 +2,7 @@ local kaomoji = require("do.kaomojis")
 local view = require('do.view')
 local edit = require('do.edit')
 local store = require('do.store')
+local state = require('do.state').state
 local C = {}
 
 ---@class DoOptions
@@ -21,28 +22,15 @@ local default_opts = {
   }
 }
 
----@class DoState
----@field message? string
----@field tasks nil | TaskStore
----@field options DoOptions
----@field auGroupId nil | number
-C.state = {
-  view_enabled = true,
-  tasks = nil,
-  message = nil,
-  kaomoji = nil,
-  options = default_opts,
-  auGroupId = nil
-}
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
 ---@param hl? string Highlight group
 function C.show_message(str, hl)
-  C.state.message = "%#" .. (hl or "TablineSel") .. "#" .. str
+  state.message = "%#" .. (hl or "TablineSel") .. "#" .. str
 
   vim.defer_fn(function()
-    C.state.message = nil
+    state.message = nil
   end, default_opts.message_timeout)
 end
 
@@ -50,46 +38,49 @@ end
 ---@param str string task to add
 ---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
-  C.state.tasks:add(str, to_front)
+  state.tasks:add(str, to_front)
   vim.api.nvim_exec_autocmds("User", {
      pattern = "DoTaskAdd",
-     group = C.state.auGroupId,
+     group = state.auGroupId,
   })
 
 end
 
 function C.done()
-  if C.state.tasks:count() == 0 then
+  if state.tasks:count() == 0 then
     C.show_message(kaomoji.confused() .. " There was nothing left to do…", "InfoMsg")
     return
   end
 
-  C.state.tasks:shift()
+  state.tasks:shift()
 
-  if C.state.tasks:count() == 0 then
+  if state.tasks:count() == 0 then
     C.show_message(kaomoji.joy() .. " ALL DONE! " .. kaomoji.joy(), "TablineSel")
   else
-    C.show_message(kaomoji.joy() .. " Great! Only " .. C.state.tasks:count() .. " to go.", "MoreMsg")
+    C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
 end
 
 function C.edit()
-  edit.toggle_edit(C.state.tasks:get(), function(new_todos)
-    C.state.tasks:set(new_todos)
+  edit.toggle_edit(state.tasks:get(), function(new_todos)
+    state.tasks:set(new_todos)
   end)
 end
 
 function C.save()
-  C.state.tasks:sync(true)
+  state.tasks:sync(true)
 end
 
 ---@param opts DoOptions
 function C.setup(opts)
-  C.state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
-  C.state.tasks = store.init(C.state.options.store)
+  state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
+  state.tasks = store.init(state.options.store)
 
+  state.auGroupId = vim.api.nvim_create_augroup("DoGroup", {
+     clear = true,
+  })
   vim.api.nvim_create_autocmd({ "User" }, {
-     group = C.state.auGroupId,
+     group = state.auGroupId,
      desc = "A task has been added",
      pattern = "DoTaskAdd",
      callback = function()
@@ -102,25 +93,25 @@ function C.setup(opts)
 end
 
 function C.toggle()
-  C.state.view_enabled = not C.state.view_enabled
+  state.view_enabled = not state.view_enabled
 end
 
 C.statusline = "%!v:lua.DoStatusline()"
 
 function C.view()
-  return view.render(C.state)
+  return view.render(state)
 end
 
 function C.view_inactive()
-  return view.render_inactive(C.state)
+  return view.render_inactive(state)
 end
 
 function C.has_items()
-  return C.state.tasks:count() > 0
+  return state.tasks:count() > 0
 end
 
 function C.is_visible()
-  return C.state.view_enabled and C.has_items()
+  return state.view_enabled and C.has_items()
 end
 
 return C
