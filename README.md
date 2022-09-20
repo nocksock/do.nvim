@@ -52,7 +52,7 @@ And it uses a simple, intuitive floating buffer to manage that list.
 use("https://github.com/nocksock/do.nvim")
 
 -- setup wherever you do that in you config (eg init.lua)
-require("do.nvim").setup({
+require("do").setup({
   -- default options
   message_timeout = 2000, -- how long notifications are shown
   kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
@@ -73,12 +73,12 @@ should work anywhere really.
 ```lua
 require('lualine').setup {
   winbar = {
-    lualine_a = { require("do.nvim").view },
+    lualine_a = { require("do").view },
   },
   inactive_winbar = {
     -- in order to prevent jumping of code in certain cursor positions this will
     -- (at the moment) show an empty line - but only if .view has contents.
-    lualine_a = { require("do.nvim").view_inactive },
+    lualine_a = { require("do").view_inactive },
   },
 }
 ```
