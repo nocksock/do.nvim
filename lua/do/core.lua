@@ -25,12 +25,14 @@ local default_opts = {
 ---@field message? string
 ---@field tasks nil | TaskStore
 ---@field options DoOptions
+---@field auGroupId nil | number
 C.state = {
   view_enabled = true,
   tasks = nil,
   message = nil,
   kaomoji = nil,
-  options = default_opts
+  options = default_opts,
+  auGroupId = nil
 }
 
 ---Show a message for the duration of `options.message_timeout`
@@ -44,10 +46,16 @@ function C.show_message(str, hl)
   end, default_opts.message_timeout)
 end
 
----@param str string
----@param to_front boolean
+---add a task to the list
+---@param str string task to add
+---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
   C.state.tasks:add(str, to_front)
+  vim.api.nvim_exec_autocmds("User", {
+     pattern = "DoTaskAdd",
+     group = C.state.auGroupId,
+  })
+
 end
 
 function C.done()
@@ -79,6 +87,16 @@ end
 function C.setup(opts)
   C.state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   C.state.tasks = store.init(C.state.options.store)
+
+  vim.api.nvim_create_autocmd({ "User" }, {
+     group = C.state.auGroupId,
+     desc = "A task has been added",
+     pattern = "DoTaskAdd",
+     callback = function()
+        print("hello world")
+     end,
+  })
+
 
   return C
 end
