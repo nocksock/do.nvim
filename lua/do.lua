@@ -27,7 +27,7 @@ create("Do", function(args)
 end, { nargs = 1, bang = true })
 
 create("Done", function(args)
-  -- not sure if I like this. 
+  -- not sure if I like this.
   if not args.bang then
     core.show_message(kaomoji.doubt() .. " Really? If so, use Done!", "ErrorMsg")
     return
