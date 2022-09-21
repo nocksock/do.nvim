@@ -59,6 +59,7 @@ require("do").setup({
   -- default options
   message_timeout = 2000, -- how long notifications are shown
   kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
+  use_winbar = false,
   doing_prefix = "Doing: ",
   store = {
     auto_create_file = false, -- automatically create a .do_tasks when calling :Do
@@ -67,11 +68,21 @@ require("do").setup({
 }) 
 ```
 
+## Winbar
+
+This plugin felt best to me using the winbar - which is a new feature in
+neovim 0.8. In order to use it, simply set `use_winbar` to true:
+
+```lua
+require('do').setup({
+  use_winbar = true
+})
+```
+
 ## Lualine
 
-To make this plugin actually show something, you'll have to mount its view
-somewhere. I currently like to have it in the winbar, eg: using lualine. But it
-should work anywhere really.
+In case you'd rather use it in the statusline or tabbar, you can use the exposed
+views to do so. For example with lualine: 
 
 ```lua
 require('lualine').setup {

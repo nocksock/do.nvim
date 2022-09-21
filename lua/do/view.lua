@@ -58,4 +58,7 @@ function View.render_inactive(state)
   return "  "
 end
 
+View.stl = "%!v:lua.DoStatusline('active')"
+View.stl_nc = "%!v:lua.DoStatusline('inactive')"
+
 return View
