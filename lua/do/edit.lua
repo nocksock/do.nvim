@@ -1,6 +1,7 @@
 local utils = require("do.utils")
 local global_win = nil
 local global_buf = nil
+local state = require("do.state")
 local M = {}
 
 local function open_float()
@@ -25,6 +26,8 @@ local function open_float()
   }
 end --
 
+--- Get all the tasks currently in the pop up window
+---@return string[]
 local function get_buf_tasks()
   local lines = vim.api.nvim_buf_get_lines(global_buf, 0, -1, true)
   local indices = {}
@@ -76,7 +79,8 @@ function M.toggle_edit(tasks, cb)
     group = group,
     buffer = global_buf,
     callback = function()
-      M.close(cb)
+       local new_todos = get_buf_tasks()
+       state.state.tasks:set(new_todos)
     end
   })
 
