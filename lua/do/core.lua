@@ -80,14 +80,14 @@ function C.setup(opts)
      clear = true,
   })
 
-  vim.api.nvim_create_autocmd({ "User" }, {
-     group = state.auGroupId,
-     desc = "A task has been added",
-     pattern = "DoTaskAdd",
-     callback = function()
-        print("hello world")
-     end,
-  })
+  -- vim.api.nvim_create_autocmd({ "User" }, {
+     -- group = state.auGroupId,
+     -- desc = "A task has been added",
+     -- pattern = "DoTaskAdd",
+     -- callback = function()
+        -- print("hello world")
+     -- end,
+  -- })
 
 
   return C
