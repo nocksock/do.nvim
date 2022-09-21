@@ -2,36 +2,10 @@ local kaomoji = require("do.kaomojis")
 local view = require('do.view')
 local edit = require('do.edit')
 local store = require('do.store')
+local state = require('do.state').state
+local default_opts = require('do.state').default_opts
 local C = {}
 
----@class DoOptions
----@field message_timeout number how long a message (eg. for Done!) should be displayed in ms
----@field kaomoji_mode number 0: most kaomojis, 1: disable kaomiji in doing mode
----@field doing_prefix string Prefix for Doing-View, default: "Doing: "
----@field store TaskStoreOptions
-local default_opts = {
-  message_timeout = 2000,
-  kaomoji_mode = 0,
-  doing_prefix = "Doing: ",
-
-  ---@class TaskStoreOptions
-  store = {
-    auto_create_file = false,
-    file_name = ".do_tasks"
-  }
-}
-
----@class DoState
----@field message? string
----@field tasks nil | TaskStore
----@field options DoOptions
-local state = {
-  view_enabled = true,
-  tasks = nil,
-  message = nil,
-  kaomoji = nil,
-  options = default_opts
-}
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
