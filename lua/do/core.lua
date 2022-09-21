@@ -67,14 +67,18 @@ function C.setup_winbar()
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = augroup,
     callback = function()
-      vim.wo.winbar = view.stl
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.wo.winbar = view.stl
+      end
     end
   })
 
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = augroup,
     callback = function()
-      vim.wo.winbar = view.stl_nc
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.wo.winbar = view.stl_nc
+      end
     end
   })
 end
