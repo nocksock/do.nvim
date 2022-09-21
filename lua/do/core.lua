@@ -31,6 +31,7 @@ end
 function C.done()
   if state.tasks:count() == 0 then
     C.show_message(kaomoji.confused() .. " There was nothing left to do…", "InfoMsg")
+    utils.exec_task_modified_autocmd()
     return
   end
 
@@ -47,7 +48,7 @@ end
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
-    vim.cmd("redraw")
+    utils.exec_task_modified_autocmd()
   end)
 end
 
@@ -105,24 +106,15 @@ function C.toggle()
   state.view_enabled = not state.view_enabled
 end
 
-function C.view(variant)
-  if variant == 'active' then
-    return view.render(state)
-  end
 
-<<<<<<< HEAD
---- return the current tasks
----@return string
-function C.view()
-  return view.render(state)
-||||||| c6ab694
-function C.view()
-  return view.render(state)
-=======
-  if variant == 'inactive' then
-    return view.render_inactive(state)
-  end
->>>>>>> main
+function C.view(variant)
+   if variant == 'active' then
+      return view.render(state)
+   end
+
+   if variant == 'inactive' then
+      return view.render_inactive(state)
+   end
 end
 
 ---for things like lualine

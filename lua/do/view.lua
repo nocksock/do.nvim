@@ -29,7 +29,7 @@ function View.render(state)
       return ""
     end
 
-    display = --[[ "%#TablineSel# " .. ]] kaomoji .. " " .. state.options.doing_prefix .. current
+    display = [[ %#TablineSel# ]] .. kaomoji .. " " .. state.options.doing_prefix .. current
 
     -- append task count number if there are more than 1 tasks
     if count > 1 then
