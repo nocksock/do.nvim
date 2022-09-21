@@ -2,6 +2,7 @@ local M = {}
 
 ---@class DoOptions
 ---@field message_timeout number how long a message (eg. for Done!) should be displayed in ms
+---@field use_winbar boolean use winbar as display
 ---@field kaomoji_mode number 0: most kaomojis, 1: disable kaomiji in doing mode
 ---@field doing_prefix string Prefix for Doing-View, default: "Doing: "
 ---@field store TaskStoreOptions
@@ -9,6 +10,7 @@ M.default_opts = {
   message_timeout = 2000,
   kaomoji_mode = 0,
   doing_prefix = "Doing: ",
+  use_winbar = false,
 
   ---@class TaskStoreOptions
   store = {

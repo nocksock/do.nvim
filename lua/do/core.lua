@@ -6,6 +6,7 @@ local state = require('do.state').state
 local default_opts = require('do.state').default_opts
 local C = {}
 
+local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
@@ -54,19 +55,45 @@ function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
 
+  if state.options.use_winbar then
+    C.setup_winbar()
+  end
+
   return C
+end
+
+function C.setup_winbar()
+  vim.o.winbar = view.stl
+  vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = augroup,
+    callback = function()
+      vim.wo.winbar = view.stl
+    end
+  })
+
+  vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    group = augroup,
+    callback = function()
+      vim.wo.winbar = view.stl_nc
+    end
+  })
 end
 
 function C.toggle()
   state.view_enabled = not state.view_enabled
 end
 
-C.statusline = "%!v:lua.DoStatusline()"
+function C.view(variant)
+  if variant == 'active' then
+    return view.render(state)
+  end
 
-function C.view()
-  return view.render(state)
+  if variant == 'inactive' then
+    return view.render_inactive(state)
+  end
 end
 
+---for things like lualine
 function C.view_inactive()
   return view.render_inactive(state)
 end
