@@ -1,5 +1,7 @@
+Create custom event for when a task has been changed
 reload tasks when task file has been changed outside of :DoEdit
 Make :cd and :tcd check for task file again
 Add demo video
 use custom highlight groups
 add tests
+HELLO

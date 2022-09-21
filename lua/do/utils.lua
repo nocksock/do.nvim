@@ -1,3 +1,4 @@
+local state = require("do.state").state
 local M = {}
 
 function M.is_white_space(str)
@@ -30,5 +31,15 @@ function M.memo_random(table, seed)
     return newcolor
   end
 end
+
+--- execute the auto command when a task is modified
+function M.exec_task_modified_autocmd()
+   vim.notify("Running autocmd")
+   vim.api.nvim_exec_autocmds("User", {
+      pattern = "TaskModified",
+      group = state.auGroupId,
+   })
+end
+
 
 return M

@@ -4,6 +4,7 @@ local edit = require('do.edit')
 local store = require('do.store')
 local state = require('do.state').state
 local default_opts = require('do.state').default_opts
+local utils = require('do.utils')
 local C = {}
 
 
@@ -23,11 +24,7 @@ end
 ---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
-  vim.api.nvim_exec_autocmds("User", {
-     pattern = "DoTaskAdd",
-     group = state.auGroupId,
-  })
-
+  utils.exec_task_modified_autocmd()
 end
 
 function C.done()
@@ -43,11 +40,13 @@ function C.done()
   else
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
+   utils.exec_task_modified_autocmd()
 end
 
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
+    vim.cmd("redraw")
   end)
 end
 
@@ -83,7 +82,7 @@ end
 
 C.statusline = "%!v:lua.DoStatusline()"
 
---- return the current task
+--- return the current tasks
 ---@return string
 function C.view()
   return view.render(state)

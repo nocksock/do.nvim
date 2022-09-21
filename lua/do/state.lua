@@ -21,12 +21,14 @@ M.default_opts = {
 ---@field message? string
 ---@field tasks nil | TaskStore
 ---@field options DoOptions
+---@field auGroupId number | nil
 M.state = {
   view_enabled = true,
   tasks = nil,
   message = nil,
   kaomoji = nil,
-  options = M.default_opts
+  options = M.default_opts,
+  auGroupId = nil
 }
 
 return M
