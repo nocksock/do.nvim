@@ -74,13 +74,14 @@ function M.toggle_edit(tasks, cb)
 
   -- local group = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
-  vim.api.nvim_create_autocmd("BufWriteCmd", {
-    group = state.auGroupId,
-    buffer = global_buf,
-    callback = function()
-      M.close(cb)
-    end
-  })
+  -- TODO: closing on save is kinda annoying
+  -- vim.api.nvim_create_autocmd("BufWriteCmd", {
+    -- group = state.auGroupId,
+    -- buffer = global_buf,
+    -- callback = function()
+      -- M.close(cb)
+    -- end
+  -- })
 
   vim.api.nvim_create_autocmd("BufModifiedSet", {
     group = state.auGroupId,

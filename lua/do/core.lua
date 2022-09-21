@@ -76,9 +76,10 @@ function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
 
-  state.auGroupId = vim.api.nvim_create_augroup("DoGroup", {
+  state.auGroupId = vim.api.nvim_create_augroup("do_nvim", {
      clear = true,
   })
+
   vim.api.nvim_create_autocmd({ "User" }, {
      group = state.auGroupId,
      desc = "A task has been added",
