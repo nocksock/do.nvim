@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v tmux)" ]; then
+  echo "\x1b[31mERROR: tmux not installed!\x1b[0m"
+  echo "can be installed eg. via brew: \x1b[32mbrew install tmux\x1b[0m"
+  exit 1
+fi
+
+if ! [ -x "$(command -v nodemon)" ]; then
+  echo "\x1b[31mERROR: nodemon not installed!\x1b[0m"
+  echo "can be installed via npm: \x1b[32mnpm install nodemon --location=global\x1b[0m"
+  exit 1
+fi
+
+tmux has-session -t do_nvim-vim 2>/dev/null
+tmux set-option renumber-windows off
+
+if [ $? == 0 ]; then
+  tmux kill-session -t do_nvim-vim
+fi
+
+tmux new -s do_nvim-vim -n watcher  "nodemon -e '*' -w test.lua -w ../lua -w ./ -x 'tmux kill-window -t do_nvim-vim:2; tmux new-window -n vim -t do_nvim-vim:2 ./vim'"

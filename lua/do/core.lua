@@ -7,6 +7,7 @@ local default_opts = require('do.state').default_opts
 local utils = require('do.utils')
 local C = {}
 
+local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
@@ -72,22 +73,59 @@ function C.setup(opts)
      -- end,
   -- })
 
+  if state.options.use_winbar then
+     C.setup_winbar()
+  end
 
   return C
+end
+
+function C.setup_winbar()
+  vim.o.winbar = view.stl
+  vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = augroup,
+    callback = function()
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.wo.winbar = view.stl
+      end
+    end
+  })
+
+  vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    group = augroup,
+    callback = function()
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.wo.winbar = view.stl_nc
+      end
+    end
+  })
 end
 
 function C.toggle()
   state.view_enabled = not state.view_enabled
 end
 
-C.statusline = "%!v:lua.DoStatusline()"
+function C.view(variant)
+  if variant == 'active' then
+    return view.render(state)
+  end
 
+<<<<<<< HEAD
 --- return the current tasks
 ---@return string
 function C.view()
   return view.render(state)
+||||||| c6ab694
+function C.view()
+  return view.render(state)
+=======
+  if variant == 'inactive' then
+    return view.render_inactive(state)
+  end
+>>>>>>> main
 end
 
+---for things like lualine
 function C.view_inactive()
   return view.render_inactive(state)
 end

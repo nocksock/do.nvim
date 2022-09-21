@@ -8,10 +8,10 @@ local M = {}
 
 local function open_float()
   local bufnr = vim.api.nvim_create_buf(false, false)
-  local width = math.min(vim.opt.columns:get(), 60)
-  local height = math.min(vim.opt.lines:get(), 10)
+  local width = math.min(vim.opt.columns:get(), 80)
+  local height = math.min(vim.opt.lines:get(), 12)
   local win = vim.api.nvim_open_win(bufnr, true, {
-    relative = "win",
+    relative = "editor",
     border = "rounded",
     noautocmd = true,
     col = vim.opt.columns:get()/2 - width/2,
