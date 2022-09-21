@@ -98,6 +98,8 @@ end
 
 C.statusline = "%!v:lua.DoStatusline()"
 
+--- return the current task
+---@return string
 function C.view()
   return view.render(state)
 end
@@ -106,6 +108,8 @@ function C.view_inactive()
   return view.render_inactive(state)
 end
 
+--- If there are currently tasks in the list
+---@return boolean
 function C.has_items()
   return state.tasks:count() > 0
 end
