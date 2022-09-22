@@ -7,7 +7,7 @@ local default_opts = require('do.state').default_opts
 local utils = require('do.utils')
 local C = {}
 
-local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
+-- local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
@@ -84,7 +84,7 @@ end
 function C.setup_winbar()
   vim.o.winbar = view.stl
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = augroup,
+    group = state.auGroupId,
     callback = function()
       if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
         vim.wo.winbar = view.stl
@@ -93,7 +93,7 @@ function C.setup_winbar()
   })
 
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = augroup,
+    group = state.auGroupId,
     callback = function()
       if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
         vim.wo.winbar = view.stl_nc
