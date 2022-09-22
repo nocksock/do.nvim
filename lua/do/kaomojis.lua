@@ -1,4 +1,4 @@
-local utils = require('do.utils')
+-- local utils = require('do.utils')
 local joy = vim.split([[
 (* ^ ω ^)
 (´ ∀ ` *)
@@ -145,9 +145,23 @@ local doing = vim.split([[
 (｡•̀ᴗ-)✧
 ]], "\n")
 
+-- NOTE: had to move this here to avoid circular requirements
+local memo_store = {}
+setmetatable(memo_store, {__mode = "v"})  -- make values weak
+local function memo_random(table, seed)
+  local key = seed or math.random(#table)
+
+  if memo_store[key] then
+    return memo_store[key]
+  else
+    local newcolor = table[math.random(#table)]
+    memo_store[key] = newcolor
+    return newcolor
+  end
+end
 return {
-  doubt = function(seed) return utils.memo_random(doubt, seed) end,
-  confused = function(seed) return utils.memo_random(confused, seed) end,
-  joy = function(seed) return utils.memo_random(joy, seed) end,
-  doing = function(seed) return utils.memo_random(doing, seed) end,
+  doubt = function(seed) return memo_random(doubt, seed) end,
+  confused = function(seed) return memo_random(confused, seed) end,
+  joy = function(seed) return memo_random(joy, seed) end,
+  doing = function(seed) return memo_random(doing, seed) end,
 }
