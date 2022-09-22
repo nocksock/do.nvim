@@ -35,10 +35,10 @@ end
 
 --- Render winbar depending on if there are tasks. Return true if winbar was rendered. False if winbar was disabled
 ---@return boolean
-function M.render_winbar()
+function M.redraw_winbar()
    if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
       if state.tasks:count() > 0 then
-         vim.wo.winbar = view.render(state)
+         vim.wo.winbar = view.stl
       else
          vim.wo.winbar = ""
       end

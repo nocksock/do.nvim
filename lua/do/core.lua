@@ -13,7 +13,6 @@ local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 ---@param str string Text to display
 ---@param hl? string Highlight group
 function C.show_message(str, hl)
-  -- vim.wo.winbar = "%#" .. (hl or "TablineSel") .. "#" .. str
   state.message = "%#" .. (hl or "TablineSel") .. "#" .. str
 
   vim.defer_fn(function()
@@ -25,7 +24,7 @@ end
 ---@param to_front boolean
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
-  utils.render_winbar()
+  utils.redraw_winbar()
 end
 
 function C.done()
@@ -41,20 +40,20 @@ function C.done()
   else
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
-  utils.render_winbar()
+  utils.redraw_winbar()
 end
 
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
-    utils.render_winbar()
+    utils.redraw_winbar()
   end)
 end
 
 --- save the tasks
 function C.save()
   state.tasks:sync(true)
-  utils.render_winbar()
+  utils.redraw_winbar()
 end
 
 ---@param opts DoOptions
@@ -76,14 +75,14 @@ function C.setup_winbar()
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = augroup,
     callback = function()
-       utils.render_winbar()
+       utils.redraw_winbar()
     end
   })
 
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = augroup,
     callback = function()
-       utils.render_winbar()
+       utils.redraw_winbar()
     end
   })
 end
