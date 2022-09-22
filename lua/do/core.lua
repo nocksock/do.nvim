@@ -1,10 +1,11 @@
+local C = {}
 local kaomoji = require("do.kaomojis")
 local view = require('do.view')
 local edit = require('do.edit')
 local store = require('do.store')
 local state = require('do.state').state
 local default_opts = require('do.state').default_opts
-local C = {}
+local utils = require('do.utils')
 
 local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
@@ -12,6 +13,7 @@ local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 ---@param str string Text to display
 ---@param hl? string Highlight group
 function C.show_message(str, hl)
+  -- vim.wo.winbar = "%#" .. (hl or "TablineSel") .. "#" .. str
   state.message = "%#" .. (hl or "TablineSel") .. "#" .. str
 
   vim.defer_fn(function()
@@ -23,6 +25,7 @@ end
 ---@param to_front boolean
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
+  utils.render_winbar()
 end
 
 function C.done()
@@ -38,16 +41,20 @@ function C.done()
   else
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
+  utils.render_winbar()
 end
 
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
+    utils.render_winbar()
   end)
 end
 
+--- save the tasks
 function C.save()
   state.tasks:sync(true)
+  utils.render_winbar()
 end
 
 ---@param opts DoOptions
@@ -69,27 +76,14 @@ function C.setup_winbar()
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = augroup,
     callback = function()
-      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
-         if C.has_items() then
-            vim.wo.winbar = view.render(state)
-         else
-            vim.wo.winbar = ""
-         end
-      end
+       utils.render_winbar()
     end
   })
 
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = augroup,
     callback = function()
-       if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
-          if C.has_items() then
-             vim.wo.winbar = view.render(state)
-             -- vim.wo.winbar = view.stl
-          else
-             vim.wo.winbar = ""
-          end
-       end
+       utils.render_winbar()
     end
   })
 end
