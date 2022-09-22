@@ -1,15 +1,20 @@
 local kaomojis = require("do.kaomojis")
 local View = {}
 
+--- Weather the winbar should visible, when view_enabled is true, and there are items in the list
+---@param state DoState
+---@return boolean
 function View.is_visible(state)
   return state.view_enabled and state.tasks:has_items()
 end
 
----comment
+---Create a string for the winbar
 ---@param state DoState
 ---@return string
 function View.render(state)
   if not View.is_visible(state) then
+     -- if view is not visible, disable winbar
+     vim.api.nvim_win_set_option(0, "winbar", nil)
     return ""
   end
 
