@@ -88,7 +88,10 @@ function C.setup_winbar()
   })
 end
 
+--- toggle the visibility of the winbar
 function C.toggle()
+   -- disable winbar completely when not visible
+   vim.wo.winbar = vim.wo.winbar == "" and view.stl or ""
   state.view_enabled = not state.view_enabled
 end
 
