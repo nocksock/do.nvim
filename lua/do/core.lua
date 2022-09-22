@@ -62,13 +62,19 @@ function C.setup(opts)
   return C
 end
 
+--- configure displaying current to do item in winbar
 function C.setup_winbar()
-  vim.o.winbar = view.stl
+  -- vim.o.winbar = view.stl
+  vim.o.winbar = nil
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = augroup,
     callback = function()
       if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
-        vim.wo.winbar = view.stl
+         if C.has_items() then
+            vim.wo.winbar = view.render(state)
+         else
+            vim.wo.winbar = ""
+         end
       end
     end
   })
@@ -76,9 +82,14 @@ function C.setup_winbar()
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = augroup,
     callback = function()
-      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
-        vim.wo.winbar = view.stl_nc
-      end
+       if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+          if C.has_items() then
+             vim.wo.winbar = view.render(state)
+             -- vim.wo.winbar = view.stl
+          else
+             vim.wo.winbar = ""
+          end
+       end
     end
   })
 end

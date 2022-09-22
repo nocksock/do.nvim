@@ -1,3 +1,4 @@
+disable winbar when there are no tasks
 reload tasks when task file has been changed outside of :DoEdit
 Make :cd and :tcd check fo task file again
 Add demo video
