@@ -79,10 +79,11 @@ function C.setup_winbar()
     end
   })
 
+  -- winbar should not be displayed in windows the cursor is not in
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = augroup,
     callback = function()
-       utils.redraw_winbar()
+       vim.wo.winbar = ""
     end
   })
 end
