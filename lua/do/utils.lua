@@ -19,16 +19,15 @@ function M.memoize(f)
   return table
 end
 
---- Render winbar depending on if there are tasks. Return true if winbar was rendered. False if winbar was disabled
----@return boolean
+--- Redraw winbar depending on if there are tasks. Redraw if there are pending tasks, other wise set to ""
 function M.redraw_winbar()
    if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
       if state.tasks:count() > 0 then
          vim.wo.winbar = view.stl
+         -- vim.wo.winbar = "HELLO"
       else
          vim.wo.winbar = ""
       end
    end
-   return false
 end
 return M

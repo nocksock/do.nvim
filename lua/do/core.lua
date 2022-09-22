@@ -43,10 +43,10 @@ function C.done()
   utils.redraw_winbar()
 end
 
+--- Edit the tasks in a floating window
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
-    utils.redraw_winbar()
   end)
 end
 

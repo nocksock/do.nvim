@@ -75,6 +75,7 @@ function M.toggle_edit(tasks, cb)
 
   local group = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
+  -- event after tasks from pop up has been written to
   vim.api.nvim_create_autocmd("BufWriteCmd", {
     group = group,
     buffer = global_buf,
@@ -89,6 +90,18 @@ function M.toggle_edit(tasks, cb)
     buffer = global_buf,
     callback = function()
       vim.api.nvim_buf_set_option(global_buf, "modified", false)
+    end
+  })
+
+  -- Leaving a popup window does not trigger BufEnter / BufLeave event. So winbar is not being refreshed. So we need to manually refresh
+  vim.api.nvim_create_autocmd({"BufLeave", "BufWinLeave"}, {
+    group = group,
+    buffer = global_buf,
+    callback = function()
+       -- wait till we leave the pop up window before redrawing winbar on the under lying window
+       vim.defer_fn(function()
+          utils.redraw_winbar()
+       end, 100)
     end
   })
 end
