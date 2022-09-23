@@ -31,5 +31,17 @@ describe("Setup", function()
 	end)
 end)
 
-describe(":Do", function()
+describe(":Do!", function()
+	it("should add a task to an empty task list", function()
+		local task_name = "test task"
+		vim.cmd(":Do! " .. task_name)
+
+		vim.cmd(":DoEdit")
+
+		-- get all the tasks in the buffer
+		local tasks = vim.api.nvim_buf_get_lines(0, -2, -1, false)
+      -- check if our task is among the tasks stored
+		assert.are.equals(vim.tbl_contains(tasks, task_name), true)
+	end)
+
 end)

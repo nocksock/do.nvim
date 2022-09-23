@@ -1,4 +1,3 @@
-Filter by file type instead of win type. Filtering by win type can cause side effects
 reload tasks when task file has been changed outside of :DoEdit
 Make :cd and :tcd check fo task file again
 Add demo video
