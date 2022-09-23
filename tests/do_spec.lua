@@ -6,9 +6,19 @@ local function get_task_list()
 	vim.cmd(":DoEdit")
 	-- get all the tasks in the buffer
 	local tasks = vim.api.nvim_buf_get_lines(0, 0, 100, false)
-	print("get_task_list tasks:", vim.inspect(tasks)) -- __AUTO_GENERATED_PRINT_VAR__
 	vim.cmd(":q!")
 	return tasks
+end
+
+--- add a task to the list of tasks
+---@param task_name string name of task
+---@param front boolean if task should be added to front of list
+local function add_task(task_name, front)
+	if front then
+		vim.cmd(":Do! " .. task_name)
+	else
+		vim.cmd(":Do " .. task_name)
+	end
 end
 
 describe("Setup", function()
@@ -87,13 +97,21 @@ describe(":Do!", function()
 
 		-- add a series of tasks
 		for _, task in ipairs(tasks) do
-			vim.cmd(":Do! " .. task)
+			add_task(task, true)
 		end
 
-		vim.cmd(":Do " .. task_name)
-
+		add_task(task_name, false)
 		local current_tasks = get_task_list()
 		-- check if the last task is the one we expect
 		assert.are.equals(current_tasks[#current_tasks], task_name)
+	end)
+end)
+
+describe("winbar shows the correct values", function()
+	it("should show the current task name with only 1 task in the list", function()
+		require("do").setup({})
+		add_task("test", true)
+		local winbar_value = vim.api.nvim_get_option_value("winbar", { scope = "local" })
+		assert.are.equal(winbar_value, "%!v:lua.DoStatusline('active')")
 	end)
 end)
