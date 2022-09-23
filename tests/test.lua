@@ -6,3 +6,4 @@ vim.o.swapfile = false
 require("do").setup({
   use_winbar = true
 })
+
