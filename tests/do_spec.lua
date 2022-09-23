@@ -1,5 +1,16 @@
 local do_nvim = require("do")
 
+--- Get the list of current tasks from `:DoEdit`
+---@return string[]
+local function get_task_list()
+	vim.cmd(":DoEdit")
+	-- get all the tasks in the buffer
+	local tasks = vim.api.nvim_buf_get_lines(0, 0, 100, false)
+	print("get_task_list tasks:", vim.inspect(tasks)) -- __AUTO_GENERATED_PRINT_VAR__
+	vim.cmd(":q!")
+	return tasks
+end
+
 describe("Setup", function()
 	it("should set up default values if no user config is provided", function()
 		local state = require("do.state").state
@@ -36,12 +47,53 @@ describe(":Do!", function()
 		local task_name = "test task"
 		vim.cmd(":Do! " .. task_name)
 
-		vim.cmd(":DoEdit")
-
-		-- get all the tasks in the buffer
-		local tasks = vim.api.nvim_buf_get_lines(0, -2, -1, false)
-      -- check if our task is among the tasks stored
+		local tasks = get_task_list()
+		-- check if our task is among the tasks stored
 		assert.are.equals(vim.tbl_contains(tasks, task_name), true)
 	end)
 
+	it("should add a task to the beginning of the list", function()
+		local tasks = {
+			"test1",
+			"test2",
+			"test3",
+			"test4",
+		}
+		local task_name = "new task"
+
+		vim.cmd(":Done!")
+
+		-- add a series of tasks
+		for _, task in ipairs(tasks) do
+			vim.cmd(":Do! " .. task)
+		end
+
+		vim.cmd(":Do! " .. task_name)
+
+		local current_tasks = get_task_list()
+		assert.are.equals(current_tasks[1], task_name)
+	end)
+
+	it("should add a task to the end of the list", function()
+		local tasks = {
+			"test1",
+			"test2",
+			"test3",
+			"test4",
+		}
+		local task_name = "new task"
+
+		vim.cmd(":Done!")
+
+		-- add a series of tasks
+		for _, task in ipairs(tasks) do
+			vim.cmd(":Do! " .. task)
+		end
+
+		vim.cmd(":Do " .. task_name)
+
+		local current_tasks = get_task_list()
+		-- check if the last task is the one we expect
+		assert.are.equals(current_tasks[#current_tasks], task_name)
+	end)
 end)
