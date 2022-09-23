@@ -27,6 +27,7 @@ function C.add(str, to_front)
   utils.redraw_winbar()
 end
 
+--- Finish the first task
 function C.done()
   if state.tasks:count() == 0 then
     C.show_message(kaomoji.confused() .. " There was nothing left to do…", "InfoMsg")

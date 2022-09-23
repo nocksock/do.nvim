@@ -82,6 +82,11 @@ describe(":Do!", function()
 
 		local current_tasks = get_task_list()
 		assert.are.equals(current_tasks[1], task_name)
+
+      -- clean up
+		for _, _ in ipairs(tasks) do
+			vim.cmd(":Done!")
+		end
 	end)
 
 	it("should add a task to the end of the list", function()
@@ -109,7 +114,6 @@ end)
 
 describe("winbar shows the correct values", function()
 	it("should show the current task name with only 1 task in the list", function()
-		require("do").setup({})
 		add_task("test", true)
 		local winbar_value = vim.api.nvim_get_option_value("winbar", { scope = "local" })
 		assert.are.equal(winbar_value, "%!v:lua.DoStatusline('active')")
