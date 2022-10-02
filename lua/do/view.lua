@@ -5,7 +5,7 @@ function View.is_visible(state)
   return state.view_enabled and state.tasks:has_items()
 end
 
----comment
+---Create a winbar string for the current task
 ---@param state DoState
 ---@return string
 function View.render(state)
@@ -29,8 +29,9 @@ function View.render(state)
       return ""
     end
 
-    display = "%#TablineSel# " .. kaomoji .. " " .. state.options.doing_prefix .. current
+    display = [[ %#TablineSel# ]] .. kaomoji .. " " .. state.options.doing_prefix .. current
 
+    -- append task count number if there are more than 1 tasks
     if count > 1 then
       display = display .. "%=+" .. (count - 1 ) .. " more "
       aligned = true
