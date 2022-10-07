@@ -1,3 +1,4 @@
+local state = require("do.state").state
 local M = {}
 local state = require('do.state').state
 local view = require('do.view')
@@ -31,4 +32,14 @@ function M.redraw_winbar()
       end
    end
 end
+
+--- execute the auto command when a task is modified
+function M.exec_task_modified_autocmd()
+   vim.api.nvim_exec_autocmds("User", {
+      pattern = "TaskModified",
+      group = state.auGroupId,
+   })
+end
+
+
 return M

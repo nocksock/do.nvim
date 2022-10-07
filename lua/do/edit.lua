@@ -1,4 +1,5 @@
 local utils = require("do.utils")
+-- print("core:", vim.inspect(core)) -- __AUTO_GENERATED_PRINT_VAR__
 local global_win = nil
 local global_buf = nil
 local state = require("do.state")

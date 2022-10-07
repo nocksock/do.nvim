@@ -19,17 +19,20 @@ function C.show_message(str, hl)
   end, default_opts.message_timeout)
 end
 
----@param str string
----@param to_front boolean
+---add a task to the list
+---@param str string task to add
+---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
   utils.redraw_winbar()
+  utils.exec_task_modified_autocmd()
 end
 
 --- Finish the first task
 function C.done()
   if state.tasks:count() == 0 then
     C.show_message(kaomoji.confused() .. " There was nothing left to do…", "InfoMsg")
+    utils.exec_task_modified_autocmd()
     return
   end
 
@@ -41,12 +44,14 @@ function C.done()
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
   utils.redraw_winbar()
+   utils.exec_task_modified_autocmd()
 end
 
 --- Edit the tasks in a floating window
 function C.edit()
   edit.toggle_edit(state.tasks:get(), function(new_todos)
     state.tasks:set(new_todos)
+    utils.exec_task_modified_autocmd()
   end)
 end
 
@@ -62,8 +67,17 @@ function C.setup(opts)
   state.tasks = store.init(state.options.store)
   state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
+  -- vim.api.nvim_create_autocmd({ "User" }, {
+     -- group = state.auGroupId,
+     -- desc = "A task has been added",
+     -- pattern = "DoTaskAdd",
+     -- callback = function()
+        -- print("hello world")
+     -- end,
+  -- })
+
   if state.options.use_winbar then
-    C.setup_winbar()
+     C.setup_winbar()
   end
 
   return C
@@ -96,14 +110,15 @@ function C.toggle()
   state.view_enabled = not state.view_enabled
 end
 
-function C.view(variant)
-  if variant == 'active' then
-    return view.render(state)
-  end
 
-  if variant == 'inactive' then
-    return view.render_inactive(state)
-  end
+function C.view(variant)
+   if variant == 'active' then
+      return view.render(state)
+   end
+
+   if variant == 'inactive' then
+      return view.render_inactive(state)
+   end
 end
 
 ---for things like lualine
@@ -111,6 +126,8 @@ function C.view_inactive()
   return view.render_inactive(state)
 end
 
+--- If there are currently tasks in the list
+---@return boolean
 function C.has_items()
   return state.tasks:count() > 0
 end

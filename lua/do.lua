@@ -16,6 +16,7 @@
 -- A tiny task manager that helps you stay on track.
 --
 local create = vim.api.nvim_create_user_command
+local state = require('do.state').state
 local kaomoji = require("do.kaomojis")
 local core = require('do.core')
 
@@ -26,7 +27,7 @@ create("Do", function(args)
 end, { nargs = 1, bang = true })
 
 create("Done", function(args)
-  -- not sure if I like this. 
+  -- not sure if I like this.
   if not args.bang then
     core.show_message(kaomoji.doubt() .. " Really? If so, use `Done!`", "ErrorMsg")
     return
