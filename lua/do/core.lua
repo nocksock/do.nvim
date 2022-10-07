@@ -86,6 +86,7 @@ end
 --- configure displaying current to do item in winbar
 function C.setup_winbar()
   -- vim.o.winbar = view.stl
+  utils.redraw_winbar()
   vim.o.winbar = nil
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,

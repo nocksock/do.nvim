@@ -1,4 +1,3 @@
-local state = require("do.state").state
 local M = {}
 local state = require('do.state').state
 local view = require('do.view')
