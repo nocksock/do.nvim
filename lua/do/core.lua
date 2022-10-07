@@ -7,7 +7,6 @@ local state = require('do.state').state
 local default_opts = require('do.state').default_opts
 local utils = require('do.utils')
 
-local augroup = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
@@ -61,6 +60,7 @@ end
 function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
+  state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
 
   if state.options.use_winbar then
     C.setup_winbar()
@@ -74,7 +74,7 @@ function C.setup_winbar()
   -- vim.o.winbar = view.stl
   vim.o.winbar = nil
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = augroup,
+    group = state.auGroupID,
     callback = function()
        utils.redraw_winbar()
     end
@@ -82,7 +82,7 @@ function C.setup_winbar()
 
   -- winbar should not be displayed in windows the cursor is not in
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = augroup,
+    group = state.auGroupID,
     callback = function()
        vim.wo.winbar = ""
     end
