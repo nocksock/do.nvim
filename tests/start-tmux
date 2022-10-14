@@ -19,4 +19,7 @@ if [ $? == 0 ]; then
   tmux kill-session -t do_nvim-vim
 fi
 
-tmux new -s do_nvim-vim -n watcher  "nodemon -e '*' -w test.lua -w ../lua -w ./ -x 'tmux kill-window -t do_nvim-vim:2; tmux new-window -n vim -t do_nvim-vim:2 ./vim'"
+tmux new         \
+  -s do_nvim-vim \
+  -n watcher     \
+  "nodemon -e '*' -w test.lua -w ../lua -w ./ -x 'tmux kill-window -t do_nvim-vim:2; tmux new-window -n vim -t do_nvim-vim:2 ./vim'"
