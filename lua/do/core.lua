@@ -23,8 +23,6 @@ end
 ---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
-  utils.redraw_winbar()
-  utils.exec_task_modified_autocmd()
 end
 
 --- Finish the first task
@@ -42,8 +40,6 @@ function C.done()
   else
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
-  utils.redraw_winbar()
-   utils.exec_task_modified_autocmd()
 end
 
 --- Edit the tasks in a floating window
@@ -84,18 +80,20 @@ function C.setup(opts)
   return C
 end
 
---- configure displaying current to do item in winbar
-function C.setup_winbar()
-  -- vim.o.winbar = view.stl
-  utils.redraw_winbar()
-  vim.o.winbar = nil
+---configure displaying current to do item in winbar
+---@param options WinbarOptions
+function C.setup_winbar(options)
   if not options.enabled then
     return
   end
+
+  vim.o.winbar = view.stl_nc
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,
     callback = function()
-       utils.redraw_winbar()
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.opt_local.winbar = view.stl
+      end
     end
   })
 
@@ -103,7 +101,9 @@ function C.setup_winbar()
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = state.auGroupID,
     callback = function()
-       vim.wo.winbar = ""
+      if vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt" then
+        vim.opt_local.winbar = view.stl_nc
+      end
     end
   })
 end
@@ -131,7 +131,7 @@ function C.view_inactive()
   return view.render_inactive(state)
 end
 
---- If there are currently tasks in the list
+---If there are currently tasks in the list
 ---@return boolean
 function C.has_items()
   return state.tasks:count() > 0
