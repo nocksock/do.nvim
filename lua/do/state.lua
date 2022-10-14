@@ -2,7 +2,11 @@ local M = {}
 
 ---@class DoOptions
 ---@field message_timeout number how long a message (eg. for Done!) should be displayed in ms
----@field use_winbar boolean use winbar as display
+---Right now there's only the option to enable the winbar, but in future
+---versions there will be some more control over its behaviour regarding
+---non-current windows.
+---@field winbar WinbarOptions|boolean
+---@field use_winbar boolean DEPRECATED: use winbar field instead.
 ---@field kaomoji_mode number 0: most kaomojis, 1: disable kaomiji in doing mode
 ---@field doing_prefix string Prefix for Doing-View, default: "Doing: "
 ---@field store TaskStoreOptions
@@ -11,6 +15,12 @@ M.default_opts = {
   kaomoji_mode = 0,
   doing_prefix = "Doing: ",
   use_winbar = false,
+
+  ---@class WinbarOptions
+  ---@field enabled boolean let do.nvim handle the winbar for you. 
+  winbar = {
+    enabled = false,
+  },
 
   ---@class TaskStoreOptions
   store = {

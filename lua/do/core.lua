@@ -7,7 +7,6 @@ local state = require('do.state').state
 local default_opts = require('do.state').default_opts
 local utils = require('do.utils')
 
-
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
 ---@param hl? string Highlight group
@@ -58,27 +57,29 @@ end
 --- save the tasks
 function C.save()
   state.tasks:sync(true)
-  utils.redraw_winbar()
 end
 
+---Setup do.nvim
 ---@param opts DoOptions
 function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
   state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
+  local winbar_options = state.options.winbar
 
-  -- vim.api.nvim_create_autocmd({ "User" }, {
-     -- group = state.auGroupId,
-     -- desc = "A task has been added",
-     -- pattern = "DoTaskAdd",
-     -- callback = function()
-        -- print("hello world")
-     -- end,
-  -- })
-
+  -- @TODO: remove this on some future version
   if state.options.use_winbar then
-     C.setup_winbar()
+    print("do.nvim: option `use_winbar` is deprecated. Use `winbar = { mode = 1 }`. See README for more.")
+    winbar_options.enabled = true
   end
+
+
+  if type(winbar_options) == "boolean" then
+    C.setup_winbar({ enabled = winbar_options })
+  else
+    C.setup_winbar(winbar_options)
+  end
+
 
   return C
 end
@@ -88,6 +89,9 @@ function C.setup_winbar()
   -- vim.o.winbar = view.stl
   utils.redraw_winbar()
   vim.o.winbar = nil
+  if not options.enabled then
+    return
+  end
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,
     callback = function()
