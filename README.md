@@ -57,7 +57,7 @@ require("do").setup({
   -- default options
   message_timeout = 2000, -- how long notifications are shown
   kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
-  use_winbar = false,
+  winbar = false,
   doing_prefix = "Doing: ",
   store = {
     auto_create_file = false, -- automatically create a .do_tasks when calling :Do
@@ -73,7 +73,7 @@ neovim 0.8. In order to use it, simply set `use_winbar` to true:
 
 ```lua
 require('do').setup({
-  use_winbar = true
+  winbar = true
 })
 ```
 
