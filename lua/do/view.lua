@@ -34,7 +34,7 @@ function View.render(state)
 
     display = [[ %#TablineSel# ]] .. kaomoji .. " " .. state.options.doing_prefix .. current
 
-    -- append task count number if there are more than 1 tasks
+    -- append task count number if there is more than 1 task
     if count > 1 then
       display = display .. "%=+" .. (count - 1 ) .. " more "
       aligned = true
