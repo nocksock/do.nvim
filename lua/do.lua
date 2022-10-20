@@ -16,7 +16,6 @@
 -- A tiny task manager that helps you stay on track.
 --
 local create = vim.api.nvim_create_user_command
-local state = require('do.state').state
 local kaomoji = require("do.kaomojis")
 local core = require('do.core')
 
