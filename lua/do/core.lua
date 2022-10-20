@@ -60,7 +60,6 @@ end
 function C.setup(opts)
   state.options = vim.tbl_deep_extend("force", default_opts, opts or {})
   state.tasks = store.init(state.options.store)
-  state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
   local winbar_options = state.options.winbar
 
   -- @TODO: remove this on some future version
@@ -69,25 +68,26 @@ function C.setup(opts)
     winbar_options.enabled = true
   end
 
-
-  if type(winbar_options) == "boolean" then
-    C.setup_winbar({ enabled = winbar_options })
-  else
-    C.setup_winbar(winbar_options)
-  end
-
+  C.setup_winbar(winbar_options)
 
   return C
 end
 
 ---configure displaying current to do item in winbar
----@param options WinbarOptions
+---@param options WinbarOptions|boolean
 function C.setup_winbar(options)
+  if type(options) == "boolean" then
+    options = ({ enabled = options })
+  end
+
   if not options.enabled then
     return
   end
 
-  vim.o.winbar = view.stl_nc
+  vim.g.winbar = view.stl_nc
+  vim.api.nvim_win_set_option(0, "winbar", view.stl)
+
+  state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,
     callback = function()
@@ -106,12 +106,38 @@ function C.setup_winbar(options)
       end
     end
   })
+
+  vim.cmd("redrawstatus")
+end
+
+function C.disable_winbar()
+  if not state.auGroupID then
+    return -- already disabled
+  end
+
+  for _, value in ipairs(vim.api.nvim_list_wins()) do
+    if vim.fn.win_gettype() == "" then
+      vim.api.nvim_win_set_option(value, "winbar", nil)
+    end
+  end
+  vim.api.nvim_del_augroup_by_id(state.auGroupID)
+
+  -- NOTE: setting vim.g.winbar to nil won't remove it somehow, maybe bug. using
+  -- vim.cmd works as expected. redrawing for good measure.
+  vim.cmd([[
+  set winbar=
+  redrawstatus
+  ]])
+end
+
+function C.enable_winbar()
+  C.setup_winbar(state.options.winbar)
 end
 
 --- toggle the visibility of the winbar
-function C.toggle()
-   -- disable winbar completely when not visible
-   vim.wo.winbar = vim.wo.winbar == "" and view.stl or ""
+function C.toggle_winbar()
+  -- disable winbar completely when not visible
+  vim.wo.winbar = vim.wo.winbar == "" and view.stl or ""
   state.view_enabled = not state.view_enabled
 end
 
