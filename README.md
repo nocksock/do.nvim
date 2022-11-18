@@ -101,7 +101,7 @@ This plugin exposes a custom event, for when a task is added or modified. You ca
 
 ```lua
 vim.api.nvim_create_autocmd({ "User" }, {
-   group = require("do.state").state.auGroupId,
+   group = require("do.state").state.auGroupID,
    pattern = "TaskModified",
    desc = "This is called when a task is added or deleted",
    callback = function()
