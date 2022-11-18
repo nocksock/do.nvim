@@ -13,8 +13,8 @@ local function open_float()
     relative = "editor",
     border = "rounded",
     noautocmd = false,
-    col = vim.opt.columns:get()/2 - width/2,
-    row = vim.opt.lines:get()/2 - height/2,
+    col = vim.opt.columns:get() / 2 - width / 2,
+    row = vim.opt.lines:get() / 2 - height / 2,
     width = width,
     height = height
   })
@@ -79,8 +79,8 @@ function M.toggle_edit(tasks, cb)
     group = state.state.auGroupID,
     buffer = global_buf,
     callback = function()
-       local new_todos = get_buf_tasks()
-       state.state.tasks:set(new_todos)
+      local new_todos = get_buf_tasks()
+      state.state.tasks:set(new_todos)
     end
   })
 

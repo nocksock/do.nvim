@@ -36,12 +36,12 @@ function View.render(state)
 
     -- append task count number if there is more than 1 task
     if count > 1 then
-      display = display .. "%=+" .. (count - 1 ) .. " more "
+      display = display .. "%=+" .. (count - 1) .. " more "
       aligned = true
     end
 
     if not state.tasks.file then
-      display = display .. (aligned and "" or "%=") .."(:DoSave)"
+      display = display .. (aligned and "" or "%=") .. "(:DoSave)"
     end
 
     return display

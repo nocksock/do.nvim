@@ -35,7 +35,7 @@ describe("Setup", function()
 			message_timeout = 2000, -- how long notifications are shown
 			kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
 			doing_prefix = "xxx: ",
-			use_winbar = true,
+			winbar = true,
 			store = {
 				auto_create_file = false, -- automatically create a .do_tasks when calling :Do
 				file_name = ".do_taskssss",
@@ -46,7 +46,7 @@ describe("Setup", function()
 		assert.are.same(state.options.message_timeout, opts.message_timeout)
 		assert.are.same(state.options.kaomoji_mode, opts.kaomoji_mode)
 		assert.are.same(state.options.doing_prefix, opts.doing_prefix)
-		assert.are.same(state.options.use_winbar, opts.use_winbar)
+		assert.are.same(state.options.winbar, opts.winbar)
 		assert.are.same(state.options.store.auto_create_file, opts.store.auto_create_file)
 		assert.are.same(state.options.store.file_name, opts.store.file_name)
 	end)

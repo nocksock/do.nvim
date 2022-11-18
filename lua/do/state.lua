@@ -17,7 +17,7 @@ M.default_opts = {
   use_winbar = false,
 
   ---@class WinbarOptions
-  ---@field enabled boolean let do.nvim handle the winbar for you. 
+  ---@field enabled boolean let do.nvim handle the winbar for you.
   winbar = {
     enabled = false,
   },

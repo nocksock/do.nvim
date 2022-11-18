@@ -147,7 +147,7 @@ local doing = vim.split([[
 
 -- NOTE: had to move this here to avoid circular requirements
 local memo_store = {}
-setmetatable(memo_store, {__mode = "v"})  -- make values weak
+setmetatable(memo_store, { __mode = "v" }) -- make values weak
 local function memo_random(table, seed)
   local key = seed or math.random(#table)
 
@@ -159,6 +159,7 @@ local function memo_random(table, seed)
     return newcolor
   end
 end
+
 return {
   doubt = function(seed) return memo_random(doubt, seed) end,
   confused = function(seed) return memo_random(confused, seed) end,

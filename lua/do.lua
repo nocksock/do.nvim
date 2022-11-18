@@ -36,8 +36,8 @@ create("Done", function(args)
 end, { bang = true })
 
 create("DoToggle", core.toggle_winbar, {})
-create("DoDisable", core.disable_winbar, {})
-create("DoEnable", core.enable_winbar, {})
+create("DoHide", core.disable_winbar, {})
+create("DoShow", core.enable_winbar, {})
 create("DoEdit", core.edit, {})
 create("DoSave", core.save, { bang = true })
 
