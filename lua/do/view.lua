@@ -5,7 +5,7 @@ local kaomojis = require("do.kaomojis")
 ---@param state DoState
 ---@return boolean
 function View.is_visible(state)
-  return state.view_enabled and state.tasks:has_items()
+  return state.view_enabled and state.tasks:has_items() or not not state.message
 end
 
 ---Create a winbar string for the current task

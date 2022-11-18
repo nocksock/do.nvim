@@ -15,7 +15,10 @@ function C.show_message(str, hl)
 
   vim.defer_fn(function()
     state.message = nil
+    C.redraw_winbar()
   end, default_opts.message_timeout)
+
+  C.redraw_winbar()
 end
 
 ---add a task to the list
@@ -23,15 +26,14 @@ end
 ---@param to_front boolean whether to add task to front of list
 function C.add(str, to_front)
   state.tasks:add(str, to_front)
-  utils.redraw_winbar()
+  C.redraw_winbar()
   utils.exec_task_modified_autocmd()
 end
 
 --- Finish the first task
 function C.done()
-  if state.tasks:count() == 0 then
+  if not state.tasks:has_items() then
     C.show_message(kaomoji.confused() .. " There was nothing left to do…", "InfoMsg")
-    utils.exec_task_modified_autocmd()
     return
   end
 
@@ -42,8 +44,8 @@ function C.done()
   else
     C.show_message(kaomoji.joy() .. " Great! Only " .. state.tasks:count() .. " to go.", "MoreMsg")
   end
-  utils.redraw_winbar()
-   utils.exec_task_modified_autocmd()
+
+  utils.exec_task_modified_autocmd()
 end
 
 --- Edit the tasks in a floating window
@@ -80,11 +82,9 @@ end
 ---configure displaying current to do item in winbar
 ---@param options WinbarOptions|boolean
 function C.setup_winbar(options)
-  if type(options) == "boolean" then
-    options = ({ enabled = options })
-  end
+  options = utils.parse_winbar_options(options)
 
-  if not options.enabled then
+  if not options then
     return
   end
 
@@ -92,12 +92,13 @@ function C.setup_winbar(options)
   vim.api.nvim_win_set_option(0, "winbar", view.stl)
 
   state.auGroupID = vim.api.nvim_create_augroup("do_nvim", { clear = true })
-  utils.redraw_winbar()
 
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,
     callback = function()
-       utils.redraw_winbar()
+      if utils.can_have_winbar() then
+        vim.opt_local.winbar = view.stl
+      end
     end
   })
 
@@ -105,7 +106,9 @@ function C.setup_winbar(options)
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = state.auGroupID,
     callback = function()
-       vim.wo.winbar = ""
+      if utils.can_have_winbar() then
+        vim.opt_local.winbar = view.stl_nc
+      end
     end
   })
 
@@ -122,14 +125,9 @@ function C.disable_winbar()
       vim.api.nvim_win_set_option(value, "winbar", nil)
     end
   end
-  vim.api.nvim_del_augroup_by_id(state.auGroupID)
 
-  -- NOTE: setting vim.g.winbar to nil won't remove it somehow, maybe bug. using
-  -- vim.cmd works as expected. redrawing for good measure.
-  vim.cmd([[
-  set winbar=
-  redrawstatus
-  ]])
+  vim.api.nvim_del_augroup_by_id(state.auGroupID)
+  C.hide()
 end
 
 function C.enable_winbar()
@@ -143,15 +141,14 @@ function C.toggle_winbar()
   state.view_enabled = not state.view_enabled
 end
 
-
 function C.view(variant)
-   if variant == 'active' then
-      return view.render(state)
-   end
+  if variant == 'active' then
+    return view.render(state)
+  end
 
-   if variant == 'inactive' then
-      return view.render_inactive(state)
-   end
+  if variant == 'inactive' then
+    return view.render_inactive(state)
+  end
 end
 
 ---for things like lualine
@@ -159,14 +156,38 @@ function C.view_inactive()
   return view.render_inactive(state)
 end
 
---- If there are currently tasks in the list
----@return boolean
-function C.has_items()
-  return state.tasks:count() > 0
+function C.is_visible()
+  return state.view_enabled and state.tasks:has_items()
 end
 
-function C.is_visible()
-  return state.view_enabled and C.has_items()
+function C.has_message()
+  return not not state.message
+end
+
+function C.hide()
+  vim.wo.winbar = ""
+
+  -- NOTE: setting vim.g.winbar to nil won't remove it somehow, maybe bug. using
+  -- vim.cmd works as expected. redrawing for good measure.
+  vim.cmd([[
+  set winbar=
+  redrawstatus
+  ]])
+end
+
+--- Redraw winbar depending on if there are tasks. Redraw if there are pending tasks, other wise set to ""
+function C.redraw_winbar()
+    if not utils.parse_winbar_options(state.options.winbar) then
+      return
+    end
+
+   if utils.can_have_winbar() then
+      if state.tasks:has_items() or C.has_message() then
+         vim.wo.winbar = view.stl
+      else
+        C.hide()
+      end
+   end
 end
 
 return C
