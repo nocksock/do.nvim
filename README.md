@@ -49,9 +49,7 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
 ## Installation
 
--  Requires Neovim 0.8. Mostly because I haven't tested with anything below.
-   At least recommended, because the winbar is ideal for this, which is a 0.8
-   feature.
+ Requires Neovim 0.8.
 
 ```lua
 -- use the package manager of your choice, eg. packer
@@ -74,7 +72,7 @@ require("do").setup({
 ## Winbar
 
 This plugin felt best to me using the winbar - which is a new feature in
-neovim 0.8. In order to use it, simply set `winbar` to true:
+neovim 0.8. In order to use it, enable it:
 
 ```lua
 require('do').setup({
