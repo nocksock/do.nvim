@@ -74,7 +74,7 @@ require("do").setup({
 ## Winbar
 
 This plugin felt best to me using the winbar - which is a new feature in
-neovim 0.8. In order to use it, simply set `use_winbar` to true:
+neovim 0.8. In order to use it, simply set `winbar` to true:
 
 ```lua
 require('do').setup({
