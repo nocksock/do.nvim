@@ -19,7 +19,12 @@
 
 A tiny task manager within nvim that helps you stay on track.
 
-![Screenshot](https://raw.githubusercontent.com/nocksock/do.nvim/main/assets/demo.png)
+
+![Preview](./assets/demo.png)
+
+## Introduction
+
+![Introduction Gif](./demo/demo.gif)
 
 ## Rationale
 
@@ -113,8 +118,6 @@ vim.api.nvim_create_autocmd({ "User" }, {
 ## Development
 
 ### Run tests
-
-🚧 There are none yet. Keeping this for future reference.
 
 Running tests requires [plenary.nvim][plenary] to be checked out in the parent directory of _this_ repository.
 You can then run:
