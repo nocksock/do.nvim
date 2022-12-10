@@ -96,9 +96,7 @@ function C.setup_winbar(options)
   vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = state.auGroupID,
     callback = function()
-      if utils.can_have_winbar() then
-        vim.opt_local.winbar = view.stl
-      end
+      C.redraw_winbar()
     end
   })
 
@@ -106,13 +104,9 @@ function C.setup_winbar(options)
   vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     group = state.auGroupID,
     callback = function()
-      if utils.can_have_winbar() then
-        vim.opt_local.winbar = view.stl_nc
-      end
+      C.redraw_winbar()
     end
   })
-
-  vim.cmd("redrawstatus")
 end
 
 function C.disable_winbar()
@@ -167,27 +161,25 @@ end
 function C.hide()
   vim.wo.winbar = ""
 
-  -- NOTE: setting vim.g.winbar to nil won't remove it somehow, maybe bug. using
-  -- vim.cmd works as expected. redrawing for good measure.
   vim.cmd([[
-  set winbar=
-  redrawstatus
+    set winbar=
+    redrawstatus
   ]])
 end
 
 --- Redraw winbar depending on if there are tasks. Redraw if there are pending tasks, other wise set to ""
 function C.redraw_winbar()
-    if not utils.parse_winbar_options(state.options.winbar) then
-      return
-    end
+  if not utils.parse_winbar_options(state.options.winbar) then
+    return
+  end
 
-   if utils.can_have_winbar() then
-      if state.tasks:has_items() or C.has_message() then
-         vim.wo.winbar = view.stl
-      else
-        C.hide()
-      end
-   end
+  if utils.can_have_winbar() then
+    if state.tasks:has_items() or C.has_message() then
+      vim.wo.winbar = view.stl
+    else
+      C.hide()
+    end
+  end
 end
 
 return C
