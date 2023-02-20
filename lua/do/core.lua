@@ -136,6 +136,8 @@ function C.toggle_winbar()
 end
 
 function C.view(variant)
+  state.tasks = store.init(state.options.store)
+
   if variant == 'active' then
     return view.render(state)
   end
@@ -147,6 +149,8 @@ end
 
 ---for things like lualine
 function C.view_inactive()
+  state.tasks = store.init(state.options.store)
+
   return view.render_inactive(state)
 end
 
