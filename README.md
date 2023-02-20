@@ -71,7 +71,11 @@ views to do so. For example with lualine:
 ```lua
 require('lualine').setup {
   winbar = {
-    lualine_a = { require("do").view },
+    lualine_a = {
+      function()
+        return require('do').view('active')
+      end,
+    },
   },
   inactive_winbar = {
     -- in order to prevent jumping of code in certain cursor positions this will
