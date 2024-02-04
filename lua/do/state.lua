@@ -1,27 +1,34 @@
 local M = {}
+
+---@alias DoSourceLoad fun(DoSourceOptions): DoTodo[]
+---@alias DoSourceSave fun(DoState): nil
+---@alias DoSource { load: DoSourceLoad, save: DoSourceSave }
+
 ---@class DoState : table
 ---@field current_todo number | nil
 ---@field options DoOptions
----@field message string | nil
----@field todos string[]
+---@field todos DoTodo[]
 
 --- @class DoOptions
 --- @field register_command boolean
 local default_options = {
   register_command = true,
+  ---@type string[]
   views = {
-    require'do.views.winbar',
-    require'do.views.notification'
+    'do.views.winbar',
   },
-  source = {
-    require'do.sources.do_file'
+  ---@type string[]
+  sources = {
+    'do.sources.file'
+  },
+  ['do.sources.file'] = {
+    file = '.todos.do',
   },
   show_winbar = true,
   show_notifications = true,
 }
 
 local initialState = {
-  message = nil,
   current_todo = nil,
   todos = {},
   options = default_options,
