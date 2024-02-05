@@ -1,13 +1,12 @@
-local r = require
 local assert = require 'luassert'
 
-local to_event = R'do.input_to_event'
-local add_action = require'do.action.add'
+local to_event = R 'do.input_to_event'
+local add_action = require 'do.action.add'
 
 describe("input_to_event", function()
   it('returns and event with an action', function()
     local handler = to_event({
-      fargs = {".add", "foo", "bar"},
+      fargs = { ".add", "foo", "bar" },
       bang = false
     })
 
@@ -19,7 +18,7 @@ describe("input_to_event", function()
 
   it('falls back to add', function()
     local handler = to_event({
-      fargs = { "foo", "bar"},
+      fargs = { "foo", "bar" },
       bang = false
     })
 
