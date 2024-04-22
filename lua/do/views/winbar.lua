@@ -19,11 +19,13 @@ return {
     vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
       group = augroup,
       callback = function()
-        if current_todo then
-          vim.o.winbar = t.todo_fmt(current_todo)
-        else
-          vim.o.winbar = t.todo_none
-        end
+        pcall(function()
+          if current_todo then
+            vim.o.winbar = t.todo_fmt(current_todo)
+          else
+            vim.o.winbar = t.todo_none
+          end
+        end)
       end
     })
 
@@ -31,7 +33,9 @@ return {
     vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
       group = augroup,
       callback = function()
-        vim.wo.winbar = " "
+        pcall(function()
+          vim.o.winbar = " "
+        end)
       end
     })
   end,
