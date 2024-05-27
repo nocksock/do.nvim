@@ -1,8 +1,8 @@
-local utils = require("do.utils")
+local utils = require("doing.utils")
 -- print("core:", vim.inspect(core)) -- __AUTO_GENERATED_PRINT_VAR__
 local global_win = nil
 local global_buf = nil
-local state = require("do.state")
+local state = require("doing.state")
 local M = {}
 
 local function open_float()
@@ -64,13 +64,16 @@ function M.toggle_edit(tasks, cb)
 
   vim.api.nvim_win_set_option(global_win, "number", true)
   vim.api.nvim_buf_set_option(global_buf, "swapfile", false)
-  vim.api.nvim_buf_set_option(global_buf, "filetype", "do_tasks")
+  vim.api.nvim_buf_set_option(global_buf, "filetype", "doing_tasks")
   vim.api.nvim_buf_set_option(global_buf, "buftype", "acwrite")
   vim.api.nvim_buf_set_option(global_buf, "bufhidden", "delete")
   vim.api.nvim_buf_set_name(global_buf, "do-edit")
   vim.api.nvim_buf_set_lines(global_buf, 0, #tasks, false, tasks)
 
   vim.keymap.set("n", "q", function()
+    M.close(cb)
+  end, { buffer = global_buf })
+  vim.keymap.set("n", "<Esc>", function()
     M.close(cb)
   end, { buffer = global_buf })
 

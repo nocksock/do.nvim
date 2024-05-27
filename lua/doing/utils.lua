@@ -1,6 +1,5 @@
 local M = {}
-local state = require('do.state').state
-local view = require('do.view')
+local state = require('doing.state').state
 
 function M.is_white_space(str)
   return str:gsub("%s", "") == ""
@@ -28,7 +27,7 @@ function M.exec_task_modified_autocmd()
 end
 
 ---Parse winbar options. Can also be used to determine whether winbar is managed
----by Do.nvim
+---by doing.nvim
 ---@param options WinbarOptions|boolean
 ---@return WinbarOptions|false
 function M.parse_winbar_options(options)
@@ -45,7 +44,21 @@ end
 
 ---Check whether the current window/buffer can display a winbar
 function M.can_have_winbar()
+
+  if vim.api.nvim_buf_get_name(0) == "" or
+  vim.fn.win_gettype() == "preview" then
+    return false
+  end
+
+  for _, exclude in ipairs(state.options.winbar.ignored_buffers) do
+    if string.find(vim.api.nvim_buf_get_name(0), exclude) then
+      return false
+    end
+  end
+
   return vim.fn.win_gettype() == "" and vim.bo.buftype ~= "prompt"
 end
 
 return M
+
+-- vim: ts=2 sts=2 sw=2 et

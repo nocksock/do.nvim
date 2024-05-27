@@ -14,8 +14,9 @@ local default_state = {
 
 function M:create_file()
   local name = self.options.file_name
-  local f = io.open(name, "w")
-  assert(f, "couldn't create " .. name)
+  local cwd = vim.loop.cwd()
+  local f = io.open(cwd .. "/" .. name, "w")
+  assert(f, "couldn't create " .. name .. " in current cwd: " ..cwd)
   f:write("")
   f:close()
   return name
@@ -24,7 +25,7 @@ end
 ---@param force? boolean force creation of file
 function M:find_file(force)
   local options = self.options
-  local file = vim.fn.findfile(options.file_name, ".;")
+  local file = vim.fn.findfile(vim.loop.cwd() .. "/" .. options.file_name, ".;")
 
   if file == "" and force then
     file = self:create_file()
@@ -97,13 +98,22 @@ end
 ---initialize task store
 M.init = function(options)
   ---@type TaskStoreState
-  local state = {
+  local tmp_state = {
     options = options,
     tasks = {}
   }
 
-  local o = vim.tbl_deep_extend("keep", state, default_state)
+  local o = vim.tbl_deep_extend("keep", tmp_state, default_state)
   local instance = setmetatable(o, { __index = M })
+
+  local state = require("doing.state").state
+  vim.api.nvim_create_autocmd("DirChanged", {
+    group = state.auGroupID,
+    callback = function()
+      local store = require("doing.store")
+      state.tasks = store.init(state.options.store)
+    end,
+  })
 
   return instance:set(instance:import_file() or {})
 end

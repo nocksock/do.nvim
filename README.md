@@ -1,13 +1,14 @@
-# Do.nvim
+# Fork
 
-A tiny task manager within nvim that helps you stay on track.
+This fork fixes the documentation, removes unused configs and removes the "kaomijis" as they may not appeal to everyone who may use this plugin.
 
+Task lists are saved in loaded in a per workspace basis.
 
-![Preview](./assets/demo.png)
+Made mainly for personal use.
 
-## Introduction
+# Doing.nvim
 
-![Introduction Gif](./demo/demo.gif)
+A tinier task manager within nvim that helps you stay on track.
 
 ## Rationale
 
@@ -25,7 +26,7 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
 -  `:Do` add a line to the end of the list.
 -  `:Do!` add a line to the front of list.
--  `:Done!` remove the first line from the list.
+-  `:Done` remove the first line from the list.
 -  `:DoEdit` edit the list in a floating window.
 -  `:DoSave` create `.do_tasks` file in cwd. Will auto-sync afterwards.
 -  `:DoToggle` toggle the display. Use with caution!
@@ -34,33 +35,25 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
  Requires Neovim 0.8.
 
-```lua
--- use the package manager of your choice, eg. packer
-use("https://github.com/nocksock/do.nvim")
+lazy.nvim:
 
--- setup wherever you do that in you config (eg init.lua)
-require("do").setup({
-  -- default options
-  message_timeout = 2000, -- how long notifications are shown
-  kaomoji_mode = 0, -- 0 kaomoji everywhere, 1 skip kaomoji in doing
-  winbar = false,
-  doing_prefix = "Doing: ",
-  store = {
-    auto_create_file = false, -- automatically create a .do_tasks when calling :Do
-    file_name = ".do_tasks",
-  }
-})
-```
+``` lua
+{
+  'hashino/do.nvim',
+  config = function()
+    require('do').setup {
+      -- default options
+      message_timeout = 2000, -- how long notifications are shown
+      winbar = { enabled = true },
 
-## Winbar
-
-This plugin felt best to me using the winbar - which is a new feature in
-neovim 0.8. In order to use it, enable it:
-
-```lua
-require('do').setup({
-  winbar = true
-})
+      doing_prefix = 'Current Task: ',
+      store = {
+        auto_create_file = true, -- automatically create a .tasks when calling :Do
+        file_name = '.tasks',
+      },
+    }
+  end,
+}
 ```
 
 ## Lualine

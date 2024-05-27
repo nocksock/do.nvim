@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# this is the command that the watcher starts vim with
-# useful to open other files, splits etc
-nvim -u test.lua -o sample.js sample.js

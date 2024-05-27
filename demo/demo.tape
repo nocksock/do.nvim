@@ -72,9 +72,9 @@ Type "oStar do.nvim on github!"
 Escape@1s
 Type@1 "q"
 
-Type "oRemove the top item quickly with :Done!"
+Type "oRemove the top item quickly with :Done"
 Escape@1
-Type ":Done!"
+Type ":Done"
 Enter@1
 
 Sleep 2

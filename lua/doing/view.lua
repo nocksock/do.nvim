@@ -1,5 +1,4 @@
 local View = {}
-local kaomojis = require("do.kaomojis")
 
 --- Weather the winbar should visible, when view_enabled is true, and there are items in the list
 ---@param state DoState
@@ -22,7 +21,6 @@ function View.render(state)
     local display = ""
     local aligned = false
     local current = state.tasks:current()
-    local kaomoji = state.options.kaomoji_mode == 0 and kaomojis.doing(current) or ""
 
     if state.message then
       return state.message
@@ -32,7 +30,7 @@ function View.render(state)
       return ""
     end
 
-    display = [[ %#TablineSel# ]] .. kaomoji .. " " .. state.options.doing_prefix .. current
+    display = state.options.doing_prefix .. current
 
     -- append task count number if there is more than 1 task
     if count > 1 then
