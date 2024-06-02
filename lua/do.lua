@@ -15,7 +15,10 @@ return {
 
     if o.views then
       for _, view in ipairs(o.views) do
-        r 'do.state'.subscribe(r(view))
+        if type(view) == 'string' then
+          view = r(view)
+        end
+        r 'do.state'.subscribe(view)
       end
     end
 
