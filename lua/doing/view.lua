@@ -9,16 +9,17 @@ end
 
 ---Create a winbar string for the current task
 ---@param state DoState
----@return string
+---@return string|table
 function View.render(state)
   if not View.is_visible(state) then
-    return ""
+    return { left = '', middle = '', right = '' }
   end
+  local right = ""
 
   -- using pcall so that it won't spam error messages
-  local ok, display = pcall(function()
+  local ok, left = pcall(function()
     local count = state.tasks:count()
-    local display = ""
+    local res = ""
     local aligned = false
     local current = state.tasks:current()
 
@@ -30,26 +31,26 @@ function View.render(state)
       return ""
     end
 
-    display = state.options.doing_prefix .. current
+    res = state.options.doing_prefix .. current
 
     -- append task count number if there is more than 1 task
     if count > 1 then
-      display = display .. "%=+" .. (count - 1) .. " more "
+      right = '+' .. (count - 1) .. " more"
       aligned = true
     end
 
     if not state.tasks.file then
-      display = display .. (aligned and "" or "%=") .. "(:DoSave)"
+      res = res .. (aligned and "" or "%=") .. "(:DoSave)"
     end
 
-    return display
+    return res
   end)
 
   if not ok then
-    return "ERR: " .. display
+    return "ERR: " .. left
   end
 
-  return display
+  return left .. right
 end
 
 function View.render_inactive(state)

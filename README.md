@@ -52,6 +52,10 @@ lazy.nvim:
         file_name = '.tasks',
       },
     }
+    local api = require('doing.api')
+
+    vim.keymap.set('n', '<leader>de', api.edit, { desc = '[E]dit what tasks you`re [D]oing' })
+    vim.keymap.set('n', '<leader>dn', api.done, { desc = '[D]o[n]e with current task' })
   end,
 }
 ```
@@ -64,16 +68,7 @@ views to do so. For example with lualine:
 ```lua
 require('lualine').setup {
   winbar = {
-    lualine_a = {
-      function()
-        return require('do').view('active')
-      end,
-    },
-  },
-  inactive_winbar = {
-    -- in order to prevent jumping of code in certain cursor positions this will
-    -- (at the moment) show an empty line - but only if .view has contents.
-    lualine_a = { require("do").view_inactive },
+    lualine_a = { require'doing.api'.status },
   },
 }
 ```
@@ -93,27 +88,3 @@ vim.api.nvim_create_autocmd({ "User" }, {
 })
 ```
 
-## Development
-
-### Run tests
-
-Running tests requires [plenary.nvim][plenary] to be checked out in the parent directory of _this_ repository.
-You can then run:
-
-```bash
-nvim --headless --noplugin -u tests/minimal.vim -c "PlenaryBustedDirectory tests/ {minimal_init = 'tests/minimal.vim'}"
-```
-
-Or if you want to run a single test file:
-
-```bash
-nvim --headless --noplugin -u tests/minimal.vim -c "PlenaryBustedDirectory tests/path_to_file.lua {minimal_init = 'tests/minimal.vim'}"
-```
-
-[nvim-lua-guide]: https://github.com/nanotee/nvim-lua-guide
-[plenary]: https://github.com/nvim-lua/plenary.nvim
-[neobundle]: https://github.com/Shougo/neobundle.vim
-[vundle]: https://github.com/gmarik/vundle
-[vim-plug]: https://github.com/junegunn/vim-plug
-[pathogen]: https://github.com/tpope/vim-pathogen
-[dein]: https://github.com/Shougo/dein.vim
