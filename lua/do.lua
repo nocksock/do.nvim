@@ -1,9 +1,10 @@
 local r = require
 
+---@class DoSetup : table
+---@field setup fun(opts: DoOptions)
 return {
-  ---@param opts DoOptions
   setup = function(opts)
-    R 'do.update'.clear()
+    R 'do.state'.clear()
 
     local state = r 'do.state'.init(opts)
     local o = state.options
@@ -14,18 +15,20 @@ return {
 
     if o.views then
       for _, view in ipairs(o.views) do
-        r 'do.update'.subscribe(r(view))
+        r 'do.state'.subscribe(r(view))
       end
     end
-
-    r 'do.update'.subscribe(r 'do.state'.set, false)
 
     if #o.sources > 0 then
       ---@param source DoSource
       for _, source in ipairs(o.sources) do
-        local tasks = R(source).load(opts)
+        if type(source) == 'string' then
+          source = r(source)
+        end
+
+        local tasks = source.load(opts)
         r 'do.import' (tasks)
-        r 'do.update'.subscribe(r(source).update)
+        r 'do.state'.subscribe(source.save)
       end
     else
       vim.notify("No persistence source for do.nvim defined. Data will be lost with session.", vim.log.levels.WARN)

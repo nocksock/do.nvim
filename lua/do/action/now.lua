@@ -12,10 +12,7 @@ return function(item)
     end
 
     table.insert(state.todos, 1, item)
-
-    if not state.current_todo then
-      state.current_todo = 1
-    end
+    state.current_todo = 1
 
     return state
   end

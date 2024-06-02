@@ -1,7 +1,8 @@
+local r = require
 --- @param event DoEvent
 return function(event)
-  local state = require'do.state'
-  require'do.update'(
-    require'do.dispatch'(event.action(event.args), state.get())
+  local state = r 'do.state'
+  state.set(
+    r 'do.dispatch' (event.action(event.args), state.get())
   )
 end

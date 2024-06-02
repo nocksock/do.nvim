@@ -1,6 +1,5 @@
 local t = require 'do.text'
 
-
 return {
   ---@param state DoState
   function(state)
