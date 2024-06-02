@@ -83,11 +83,11 @@ end
 
 ---@param new_state DoState
 function M.set(new_state)
-  state = new_state
+  state = vim.tbl_extend("force", state, new_state)
   for _, v in pairs(listeners) do
     get_listener_fn(v)(state)
   end
-  return new_state
+  return state
 end
 
 function M.get()
