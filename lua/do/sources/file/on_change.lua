@@ -2,12 +2,12 @@ local r = require
 ---@type DoSourceFileOptions
 return function(opts)
   local augroup = vim.api.nvim_create_augroup("do.file", { clear = true })
-  vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     pattern = opts.file_name,
     group = augroup,
-    callback = function()
-      local state = r 'do.sources.file.parse' (opts.file_name)
-      r 'do.state'.set(state)
+    callback = function(args)
+      local content = vim.api.nvim_buf_get_lines(args.buf, 1, -1, false)
+      r 'do.state'.set({ todos = r 'do.sources.file.parse' (content) })
     end
   })
 end

@@ -1,5 +1,5 @@
-return function(file)
-  local file_contents = vim.fn.readfile(file)
+---@return DoState
+return function(file_contents)
   ---@type DoTodo[]
   local todos = {}
 
@@ -9,6 +9,7 @@ return function(file)
     local todo = {
       task = line,
       source = "do.sources.file",
+      done = false
     }
     table.insert(todos, todo)
   end

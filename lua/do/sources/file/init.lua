@@ -5,7 +5,7 @@ local default_options = {
   file_name = 'todos.do'
 }
 
-local opts = nils
+local opts = nil
 local file = nil
 
 ---@type DoSource
@@ -14,31 +14,18 @@ return {
   load = function(input_opts)
     opts = vim.tbl_extend("force", default_options, input_opts)
 
+    r 'do.sources.file.on_change' (opts)
+
     file = r 'do.sources.file.find' (opts.file_name)
     if file == nil then
       file = r 'do.source.file.create' (opts.file_name)
-      return {}
     end
 
-    local file_contents = vim.fn.readfile(file)
-    ---@type DoTodo[]
-    local todos = {}
-
-    ---@param line string
-    for _, line in ipairs(file_contents) do
-      ---@type DoTodo
-      local todo = {
-        task = line,
-        source = "do.sources.file",
-      }
-      table.insert(todos, todo)
-    end
-
-    return todos
+    return r 'do.sources.file.parse' (vim.fn.readfile(file))
   end,
 
   ---@param state DoState
-  update = function(state)
+  save = function(state)
     local tasks = {}
     for _, todo in ipairs(state.todos) do
       table.insert(tasks, todo.task)
