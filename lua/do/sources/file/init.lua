@@ -14,7 +14,7 @@ return {
   load = function(input_opts)
     opts = vim.tbl_extend("force", default_options, input_opts)
 
-    r 'do.sources.file.on_change' (opts)
+    r 'lua.do.sources.file.setup_autocmd' (opts)
 
     file = r 'do.sources.file.find' (opts.file_name)
     if file == nil then
