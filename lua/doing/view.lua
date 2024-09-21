@@ -35,7 +35,7 @@ function View.render(state)
 
     -- append task count number if there is more than 1 task
     if count > 1 then
-      right = '+' .. (count - 1) .. " more"
+      right = ' +' .. (count - 1) .. " more"
       aligned = true
     end
 
