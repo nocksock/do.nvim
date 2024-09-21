@@ -1,14 +1,8 @@
-# Fork
-
-This fork fixes the documentation, removes unused configs and removes the "kaomijis" as they may not appeal to everyone who may use this plugin.
-
-Task lists are saved in loaded in a per workspace basis.
-
-Made mainly for personal use.
-
 # Doing.nvim
 
-A tinier task manager within nvim that helps you stay on track.
+A tiny task manager within nvim that helps you stay on track.
+
+![doing](doing1.png)
 
 ## Rationale
 
@@ -24,11 +18,11 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
 ## Usage
 
--  `:Do` add a line to the end of the list.
--  `:Do!` add a line to the front of list.
--  `:Done` remove the first line from the list.
--  `:DoEdit` edit the list in a floating window.
--  `:DoSave` create `.do_tasks` file in cwd. Will auto-sync afterwards.
+-  `:Do` add a task to the end of the list.
+-  `:Do!` add a task to the front of list.
+-  `:Done` remove the first task from the list.
+-  `:DoEdit` edit the tasklist in a floating window.
+-  `:DoSave` create `.tasks` file in cwd. Will auto-sync afterwards.
 -  `:DoToggle` toggle the display. Use with caution!
 
 ## Installation
@@ -37,21 +31,40 @@ And it uses a simple, intuitive floating buffer to manage that list.
 
 lazy.nvim:
 
+```lua
+-- minimal installations
+return {
+  'hashino/do.nvim',
+  config = true,
+}
+```
+
+## Configuration
+
 ``` lua
-{
+-- example configuration
+return {
   'hashino/do.nvim',
   config = function()
     require('do').setup {
       -- default options
-      message_timeout = 2000, -- how long notifications are shown
-      winbar = { enabled = true },
+      message_timeout = 2000,
+      winbar = { 
+        enabled = true,
+        -- ignores buffers that match filetype
+        ignored_buffers = { 'NvimTree' }
+      },
 
       doing_prefix = 'Current Task: ',
       store = {
-        auto_create_file = true, -- automatically create a .tasks when calling :Do
+        -- automatically create a .tasks when calling :Do
+        auto_create_file = true, 
         file_name = '.tasks',
       },
     }
+    -- example on how to change the winbar highlight
+    vim.api.nvim_set_hl(0, 'WinBar', { link = 'Search' })
+
     local api = require('doing.api')
 
     vim.keymap.set('n', '<leader>de', api.edit, { desc = '[E]dit what tasks you`re [D]oing' })
@@ -60,7 +73,7 @@ lazy.nvim:
 }
 ```
 
-## Lualine
+### Lualine
 
 In case you'd rather use it in the statusline or tabbar, you can use the exposed
 views to do so. For example with lualine:
@@ -73,7 +86,7 @@ require('lualine').setup {
 }
 ```
 
-## Events
+### Events
 
 This plugin exposes a custom event, for when a task is added or modified. You can use it like so:
 

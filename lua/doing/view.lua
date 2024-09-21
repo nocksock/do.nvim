@@ -14,43 +14,8 @@ function View.render(state)
   if not View.is_visible(state) then
     return { left = '', middle = '', right = '' }
   end
-  local right = ""
 
-  -- using pcall so that it won't spam error messages
-  local ok, left = pcall(function()
-    local count = state.tasks:count()
-    local res = ""
-    local aligned = false
-    local current = state.tasks:current()
-
-    if state.message then
-      return state.message
-    end
-
-    if count == 0 then
-      return ""
-    end
-
-    res = state.options.doing_prefix .. current
-
-    -- append task count number if there is more than 1 task
-    if count > 1 then
-      right = ' +' .. (count - 1) .. " more"
-      aligned = true
-    end
-
-    if not state.tasks.file then
-      res = res .. (aligned and "" or "%=") .. "(:DoSave)"
-    end
-
-    return res
-  end)
-
-  if not ok then
-    return "ERR: " .. left
-  end
-
-  return left .. right
+  return require("doing.api").status()
 end
 
 function View.render_inactive(state)

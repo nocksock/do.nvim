@@ -5,12 +5,10 @@ local core = require('doing.core')
 _G.DoStatusline = core.view
 
 create("Do", function(args)
-  core.add(args.args, args.bang)
-end, { nargs = 1, bang = true })
+  core.add(args.bang)
+end, { nargs = 0, bang = true })
 
-create("Done", function()
-  core.done()
-end, {})
+create("Done", core.done, {})
 
 create("DoToggle", core.toggle_winbar, {})
 create("DoHide", core.disable_winbar, {})

@@ -8,9 +8,8 @@ local utils = require("doing.utils")
 
 ---Show a message for the duration of `options.message_timeout`
 ---@param str string Text to display
----@param hl? string Highlight group
-function Core.show_message(str, hl)
-  state.message = --[[ string.rep(' ', vim.fn.winwidth(0) - 4 - string.len(str)) .. ]] str
+function Core.show_message(str)
+  state.message = str
 
   vim.defer_fn(function()
     state.message = nil
@@ -21,27 +20,29 @@ function Core.show_message(str, hl)
 end
 
 ---add a task to the list
----@param str string task to add
 ---@param to_front boolean whether to add task to front of list
-function Core.add(str, to_front)
-  state.tasks:add(str, to_front)
-  Core.redraw_winbar()
-  utils.exec_task_modified_autocmd()
+function Core.add(to_front)
+  state.tasks:sync(true)
+  vim.ui.input({ prompt = 'Enter the new task: ' }, function(input)
+    state.tasks:add(input, to_front)
+    Core.redraw_winbar()
+    utils.exec_task_modified_autocmd()
+  end)
 end
 
 --- Finish the first task
 function Core.done()
   if not state.tasks:has_items() then
-    Core.show_message(" There was nothing left to do ", "InfoMsg")
+    Core.show_message(" There was nothing left to do ")
     return
   end
 
   state.tasks:shift()
 
   if state.tasks:count() == 0 then
-    Core.show_message(" All tasks done ", "TablineSel")
+    Core.show_message(" All tasks done ")
   else
-    Core.show_message(state.tasks:count() .. " left.", "MoreMsg")
+    Core.show_message(state.tasks:count() .. " left.")
   end
 
   utils.exec_task_modified_autocmd()
@@ -53,6 +54,7 @@ function Core.edit()
     state.tasks:set(new_todos)
     utils.exec_task_modified_autocmd()
   end)
+  state.tasks:sync(true)
   Core.redraw_winbar()
 end
 
@@ -83,7 +85,7 @@ function Core.setup_winbar(options)
   end
 
   vim.g.winbar = view.stl_nc
-  vim.api.nvim_win_set_option(0, "winbar", view.stl)
+  vim.api.nvim_set_option_value("winbar", view.stl, {})
 
   state.auGroupID = vim.api.nvim_create_augroup("doing_nvim", { clear = true })
 
@@ -101,9 +103,9 @@ function Core.disable_winbar()
     return -- already disabled
   end
 
-  for _, value in ipairs(vim.api.nvim_list_wins()) do
+  for _, _ in ipairs(vim.api.nvim_list_wins()) do
     if vim.fn.win_gettype() == "" then
-      vim.api.nvim_win_set_option(value, "winbar", nil)
+      vim.api.nvim_set_option_value("winbar", nil, {})
     end
   end
 
@@ -152,10 +154,8 @@ end
 function Core.hide()
   vim.wo.winbar = ""
 
-  vim.cmd([[
-    set winbar=
-    redrawstatus
-  ]])
+  vim.cmd([[ set winbar= ]])
+  vim.cmd([[ redrawstatus ]])
 end
 
 --- Redraw winbar depending on if there are tasks. Redraw if there are pending tasks, other wise set to ""
