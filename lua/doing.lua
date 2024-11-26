@@ -5,8 +5,8 @@ local core = require('doing.core')
 _G.DoStatusline = core.view
 
 create("Do", function(args)
-  core.add(args.bang)
-end, { nargs = 0, bang = true })
+  core.add(unpack(args.fargs), args.bang)
+end, { nargs = '?', bang = true })
 
 create("Done", core.done, {})
 

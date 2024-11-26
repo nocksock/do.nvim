@@ -20,14 +20,19 @@ function Core.show_message(str)
 end
 
 ---add a task to the list
+---@param task string the task to be added, if empty, asks user for input
 ---@param to_front boolean whether to add task to front of list
-function Core.add(to_front)
+function Core.add(task, to_front)
   state.tasks:sync(true)
-  vim.ui.input({ prompt = 'Enter the new task: ' }, function(input)
-    state.tasks:add(input, to_front)
-    Core.redraw_winbar()
-    utils.exec_task_modified_autocmd()
-  end)
+  if task == nil then
+    vim.ui.input({ prompt = 'Enter the new task: ' }, function(input)
+      state.tasks:add(input, to_front)
+      Core.redraw_winbar()
+      utils.exec_task_modified_autocmd()
+    end)
+  else
+    state.tasks:add(task, to_front)
+  end
 end
 
 --- Finish the first task

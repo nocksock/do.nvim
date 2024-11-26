@@ -81,6 +81,10 @@ function M:count()
   return #self:get()
 end
 
+--- 
+---@param str string 
+---@param to_front boolean
+---@return TaskStore
 function M:add(str, to_front)
   if to_front then
     table.insert(self.tasks, 1, str)
