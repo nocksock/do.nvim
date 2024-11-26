@@ -2,7 +2,9 @@
 
 A tiny task manager within nvim that helps you stay on track.
 
-![doing](doing1.png)
+this plugin is a fork of [do.nvim](https://github.com/nocksock/do.nvim)
+
+![doing](https://raw.githubusercontent.com/Hashino/doing.nvim/main/demo/demo.gif)
 
 ## Rationale
 
@@ -34,7 +36,7 @@ lazy.nvim:
 ```lua
 -- minimal installations
 return {
-  'hashino/do.nvim',
+  'Hashino/doing.nvim',
   config = true,
 }
 ```
