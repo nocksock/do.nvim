@@ -127,17 +127,18 @@ function Core.toggle_winbar()
   -- disable winbar completely when not visible
   vim.wo.winbar = vim.wo.winbar == "" and view.stl or ""
   state.view_enabled = not state.view_enabled
+  state.options.winbar = not state.options.winbar
 end
 
 function Core.view(variant)
   state.tasks = store.init(state.options.store)
 
   if variant == "active" then
-    return view.render(state)
+    return view.render()
   end
 
   if variant == "inactive" then
-    return view.render_inactive(state)
+    return view.render_inactive()
   end
 end
 
@@ -145,7 +146,7 @@ end
 function Core.view_inactive()
   state.tasks = store.init(state.options.store)
 
-  return view.render_inactive(state)
+  return view.render_inactive()
 end
 
 function Core.is_visible()
