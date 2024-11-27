@@ -43,15 +43,15 @@ function View.render()
     return "ERR: " .. left
   end
 
-  return ' ' .. left .. '  ' .. right .. ' '
+  if not right then
+    return left
+  end
+
+  return left .. '  ' .. right
 end
 
 function View.render_inactive()
-  if not View.is_visible() then
-    return ""
-  end
-
-  return "  "
+  return ""
 end
 
 View.stl = "%!v:lua.DoStatusline('active')"
