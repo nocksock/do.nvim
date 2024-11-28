@@ -1,5 +1,6 @@
 local state = require("doing.state").state
 local store = require("doing.store")
+local utils = require("doing.utils")
 
 local View = {}
 
@@ -12,6 +13,12 @@ end
 ---Create a winbar string for the current task
 ---@return string|table
 function View.render()
+  if (not state.view_enabled) or
+      (not utils.should_display_task())
+  then
+    return ""
+  end
+
   state.tasks = store.init(state.options.store)
   local right = ""
 
@@ -48,10 +55,6 @@ function View.render()
   end
 
   return left .. '  ' .. right
-end
-
-function View.render_inactive()
-  return ""
 end
 
 View.stl = "%!v:lua.DoStatusline('active')"

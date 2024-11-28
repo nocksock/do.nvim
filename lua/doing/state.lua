@@ -5,7 +5,7 @@ local M = {}
 ---Right now there's only the option to enable the winbar, but in future
 ---versions there will be some more control over its behaviour regarding
 ---non-current windows.
----@field winbar WinbarOptions|boolean Currenty only has the enabled option: winbar = { enabled = true }
+---@field winbar WinbarOptions Currenty only has the enabled option: winbar = { enabled = true }
 ---@field doing_prefix string Prefix for Doing-View, default: "Doing: "
 ---@field store TaskStoreOptions
 M.default_opts = {
@@ -15,6 +15,7 @@ M.default_opts = {
 
   ---@class WinbarOptions
   ---@field enabled boolean let doing.nvim handle the winbar for you.
+  ---@field ignored_buffers table filetypes to ignore
   winbar = {
     enabled = true,
     ignored_buffers = { "NvimTree" },

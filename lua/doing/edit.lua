@@ -19,7 +19,8 @@ local function open_float()
     height = height
   })
 
-  vim.api.nvim_win_set_option(win, "winhl", "Normal:NormalFloat")
+  -- vim.api.nvim_win_set_option(win, "winhl", "Normal:NormalFloat")
+  vim.api.nvim_set_option_value("winhl", "Normal:NormalFloat", {})
 
   return {
     buf = bufnr,
@@ -30,7 +31,7 @@ end --
 --- Get all the tasks currently in the pop up window
 ---@return string[]
 local function get_buf_tasks()
-  local lines = vim.api.nvim_buf_get_lines(global_buf, 0, -1, true)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
   local indices = {}
 
   for _, line in pairs(lines) do
@@ -47,7 +48,7 @@ function M.close(cb)
     cb(get_buf_tasks())
   end
 
-  vim.api.nvim_win_close(global_win, true)
+  vim.api.nvim_win_close(0, true)
   global_win = nil
   global_buf = nil
 end
@@ -62,11 +63,11 @@ function M.toggle_edit(tasks, cb)
   global_win = win_info.win
   global_buf = win_info.buf
 
-  vim.api.nvim_win_set_option(global_win, "number", true)
-  vim.api.nvim_buf_set_option(global_buf, "swapfile", false)
-  vim.api.nvim_buf_set_option(global_buf, "filetype", "doing_tasks")
-  vim.api.nvim_buf_set_option(global_buf, "buftype", "acwrite")
-  vim.api.nvim_buf_set_option(global_buf, "bufhidden", "delete")
+  vim.api.nvim_set_option_value("number", true, {})
+  vim.api.nvim_set_option_value("swapfile", false, {})
+  vim.api.nvim_set_option_value("filetype", "doing_tasks", {})
+  vim.api.nvim_set_option_value("buftype", "acwrite", {})
+  vim.api.nvim_set_option_value("bufhidden", "delete", {})
   vim.api.nvim_buf_set_name(global_buf, "do-edit")
   vim.api.nvim_buf_set_lines(global_buf, 0, #tasks, false, tasks)
 
@@ -91,7 +92,7 @@ function M.toggle_edit(tasks, cb)
     group = state.state.auGroupID,
     buffer = global_buf,
     callback = function()
-      vim.api.nvim_buf_set_option(global_buf, "modified", false)
+      vim.api.nvim_set_option_value("modified", false, {})
     end
   })
 end

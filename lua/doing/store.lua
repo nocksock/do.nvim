@@ -15,10 +15,10 @@ local default_state = {
 function M:create_file()
   local name = self.options.file_name
   local cwd = vim.loop.cwd()
-  local f = io.open(cwd .. "/" .. name, "w")
-  assert(f, "couldn't create " .. name .. " in current cwd: " ..cwd)
-  f:write("")
-  f:close()
+  local file = io.open(cwd .. "/" .. name, "w")
+  assert(file, "couldn't create " .. name .. " in current cwd: " ..cwd)
+  file:write("")
+  file:close()
   return name
 end
 
@@ -81,7 +81,6 @@ function M:count()
   return #self:get()
 end
 
---- 
 ---@param str string 
 ---@param to_front boolean
 ---@return TaskStore

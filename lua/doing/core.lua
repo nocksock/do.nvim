@@ -81,10 +81,8 @@ function Core.setup(opts)
 end
 
 ---configure displaying current to do item in winbar
----@param options WinbarOptions|boolean
+---@param options WinbarOptions
 function Core.setup_winbar(options)
-  options = utils.parse_winbar_options(options)
-
   if not options then
     return
   end
@@ -120,41 +118,22 @@ end
 
 function Core.enable_winbar()
   Core.setup_winbar(state.options.winbar)
+  Core.redraw_winbar()
 end
 
 --- toggle the visibility of the winbar
 function Core.toggle_winbar()
   -- disable winbar completely when not visible
   vim.wo.winbar = vim.wo.winbar == "" and view.stl or ""
+
   state.view_enabled = not state.view_enabled
-  state.options.winbar = not state.options.winbar
+  state.options.winbar.enabled = not state.options.winbar.enabled
+
+  Core.redraw_winbar()
 end
 
-function Core.view(variant)
-  state.tasks = store.init(state.options.store)
-
-  if variant == "active" then
-    return view.render()
-  end
-
-  if variant == "inactive" then
-    return view.render_inactive()
-  end
-end
-
----for things like lualine
-function Core.view_inactive()
-  state.tasks = store.init(state.options.store)
-
-  return view.render_inactive()
-end
-
-function Core.is_visible()
-  return state.view_enabled and state.tasks:has_items()
-end
-
-function Core.has_message()
-  return not not state.message
+function Core.view()
+  return view.render()
 end
 
 function Core.hide()
@@ -166,16 +145,17 @@ end
 
 --- Redraw winbar depending on if there are tasks. Redraw if there are pending tasks, other wise set to ""
 function Core.redraw_winbar()
-  if not utils.parse_winbar_options(state.options.winbar) then
-    return
-  end
 
-  if utils.can_have_winbar() then
+  if utils.should_display_task() and
+      state.options.winbar.enabled
+  then
     if state.tasks:has_items() or Core.has_message() then
       vim.wo.winbar = view.stl
     else
       Core.hide()
     end
+  else
+    Core.hide()
   end
 end
 
