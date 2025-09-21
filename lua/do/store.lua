@@ -14,6 +14,14 @@ local default_state = {
 
 function M:create_file()
   local name = self.options.file_name
+
+  if vim.uv.fs_stat(name) then
+    vim.notify(
+      "do.nvim: couldn't create. file already exists "..name,
+      vim.log.levels.WARN
+    )
+  end
+
   local f = io.open(name, "w")
   assert(f, "couldn't create " .. name)
   f:write("")
