@@ -24,13 +24,13 @@ end
 ---@param force? boolean force creation of file
 function M:find_file(force)
   local options = self.options
-  local file = vim.fn.findfile(options.file_name, ".;")
+  local match, file = next(vim.fs.find({options.file_name}, {upward=true, limit=1}))
 
-  if file == "" and force then
+  if match == nil and force then
     file = self:create_file()
   end
 
-  if file == "" then
+  if match == nil then
     return nil
   end
 
