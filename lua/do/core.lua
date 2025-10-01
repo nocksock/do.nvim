@@ -30,6 +30,14 @@ function C.add(str, to_front)
   utils.exec_task_modified_autocmd()
 end
 
+---add a task as the next item to do
+---@param str string task to add
+function C.add_next(str)
+  state.tasks:add_next(str)
+  C.redraw_winbar()
+  utils.exec_task_modified_autocmd()
+end
+
 --- Finish the first task
 function C.done()
   if not state.tasks:has_items() then

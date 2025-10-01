@@ -98,6 +98,11 @@ function M:add(str, to_front)
   return self:sync()
 end
 
+function M:add_next(str)
+  table.insert(self.tasks, 2, str)
+  return self:sync()
+end
+
 function M:shift()
   return table.remove(self.tasks, 1), self:sync()
 end

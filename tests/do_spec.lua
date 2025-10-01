@@ -119,3 +119,30 @@ describe("winbar shows the correct values", function()
 		assert.are.equal(winbar_value, "%!v:lua.DoStatusline('active')")
 	end)
 end)
+
+describe("DoNext", function()
+  it("should create a new task after the current one", function()
+		local tasks = {
+			"test10",
+			"test20",
+			"test30",
+			"test40",
+		}
+		local task_name = "test15"
+
+		-- add a series of tasks
+		for _, task in ipairs(tasks) do
+			vim.cmd(":Do! " .. task)
+		end
+
+		vim.cmd(":DoNext " .. task_name)
+
+		local current_tasks = get_task_list()
+		assert.are.equals(current_tasks[2], task_name)
+
+    -- clean up
+		for _, _ in ipairs(tasks) do
+			vim.cmd(":Done!")
+		end
+  end)
+end)

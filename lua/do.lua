@@ -25,6 +25,11 @@ create("Do", function(args)
   core.add(args.args, args.bang)
 end, { nargs = 1, bang = true })
 
+create("DoNext", function(args)
+  core.add_next(args.args, args.bang)
+end, { nargs = 1, bang = true })
+
+
 create("Done", function(args)
   -- not sure if I like this.
   if not args.bang then
